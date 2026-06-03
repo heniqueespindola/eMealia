@@ -18,7 +18,8 @@ Redireccionamento automático após login. Protecção de rotas para utilizadore
 ```
 /new-feature Autenticação — ecrãs de login e registo com Supabase Auth (email + password),
 redireccionamento automático para homepage após login, e protecção de rotas para utilizadores
-não autenticados. Usar a paleta do eMealia (verde #1D9E75 como cor primária).
+não autenticados. Usar a paleta do eMealia: fundo #1B2632 (azul-noite), botões #FFB162 (âmbar),
+texto branco sobre fundos escuros. Fontes: serif para títulos, sans para corpo.
 ```
 
 ---
@@ -38,7 +39,8 @@ sem glúten, sem lactose, airfryer, rápidas). Passo 2: adicionar primeiros ingr
 despensa com sugestões de ingredientes comuns (ovo, massa, tomate, etc.) — pelo menos 3
 para continuar. Passo 3: selecção de filtros favoritos e frequência de cozinha semanal.
 Guardar tudo na tabela profiles do Supabase. Navegação com botão Próximo e indicador de
-progresso (1/3, 2/3, 3/3). Usar verde eMealia (#1D9E75) como cor de destaque.
+progresso (1/3, 2/3, 3/3). Usar âmbar eMealia (#FFB162) como cor de destaque em botões e
+indicadores de progresso. Fundo #EEE9DF (pergaminho) para os ecrãs de onboarding.
 ```
 
 ---
@@ -53,14 +55,16 @@ Anel de progresso animado no card central mostra tempo restante antes de avança
 ```
 /new-feature Homepage com feed de vídeos — ecrã inicial da app após autenticação.
 Funcionalidades: (1) carrossel horizontal de cards de vídeo em formato portrait (9:16)
-onde o card central está em destaque (escala 1.0, borda verde eMealia) e os adjacentes
+onde o card central está em destaque (escala 1.0, borda #FFB162 âmbar) e os adjacentes
 estão em escala reduzida (0.82) e com overlay escuro, (2) autoplay automático no card
 central após 4 segundos com anel de progresso SVG animado, (3) ao clicar num card lateral
 move o carrossel para esse card, (4) filtros de categoria em pills horizontais (Todos,
 Rápidas, Vegan, Airfryer, Sobremesas) que filtram os cards visíveis e reiniciam o autoplay,
-(5) badges de fonte em cada card (YouTube vermelho, TikTok preto, Instagram roxo, eMealia verde),
-(6) dots de navegação na base e setas de prev/next. Dados mock inicialmente, depois ligar
-à tabela video_cache do Supabase. Personalizar feed pelos filtros_dieteticos do perfil.
+(5) badges de fonte em cada card (YouTube #FF0000, TikTok #010101, Instagram #C13584, eMealia #FFB162),
+(6) dots de navegação na base e setas de prev/next. Header com fundo #1B2632 (azul-noite) e
+logo eMealia. Pills de filtro com fundo #2C3B4D inactivo e #FFB162 activo.
+Dados mock inicialmente, depois ligar à tabela video_cache do Supabase.
+Personalizar feed pelos filtros_dieteticos do perfil.
 ```
 
 ---
@@ -323,3 +327,4 @@ Incluir pedido de permissão no onboarding (Passo 3).
 ---
 
 *Documento criado em Junho 2026 — mocruz / eMealia*
+*Paleta de referência: #1B2632 · #2C3B4D · #C9C1B1 · #EEE9DF · #FFB162 · #A35139*

@@ -18,27 +18,63 @@ Agrega receitas de blogs, YouTube, TikTok e Instagram numa experiência unificad
 
 **Nome:** eMealia (jogo com "meal" + sufixo ibérico/digital)
 
-**Logo:** Ícone de chef hat estilizado + wordmark "eMealia"
-- Formato principal: ícone à esquerda + "eMealia" à direita
-- Ícone standalone: chef hat (para ícone de app, favicon)
-- Cor primária da marca: #1D9E75 (verde esmeralda)
+**Logo:** Ícone circular tipo carimbo de mercado + wordmark "eMealia"
+- Formato principal: ícone à esquerda + "eMealia" à direita (serif "e" + sans "Mealia")
+- Ícone standalone: carimbo circular (para ícone de app, favicon)
+- Cor primária da marca: #FFB162 (âmbar quente)
 - Ficheiros em: `src/assets/images/`
 
 **Paleta de cores (exacta):**
 ```
-#1D9E75  Verde esmeralda (primary — botões, CTAs, destaques de marca)
-#0F6E56  Verde escuro (primary dark — headers, texto sobre verde claro)
-#085041  Verde muito escuro (deep — backgrounds escuros, bordas fortes)
-#E1F5EE  Verde muito claro (background suave, badges, pills)
-#111111  Quase-preto (texto principal, backgrounds dark)
-#F5F5F0  Off-white/creme (background claro principal)
-#888780  Cinza médio (texto secundário, labels, placeholders)
-#D3D1C7  Cinza claro (bordas, separadores)
-#FF0000  Vermelho YouTube (badge de fonte)
-#010101  Preto TikTok (badge de fonte)
-#C13584  Roxo Instagram (badge de fonte)
+/* — Backgrounds e estrutura — */
+#1B2632  Azul-noite (background principal escuro — headers, splash, nav bar)
+#2C3B4D  Azul-ardósia (superfícies secundárias escuras — cards, drawers)
+
+/* — Neutros quentes — */
+#C9C1B1  Areia escura (bordas, separadores, placeholders)
+#EEE9DF  Pergaminho (background claro principal — ecrãs light mode)
+
+/* — Accent — */
+#FFB162  Âmbar (primary — botões, CTAs, ícone da marca, destaques)
+#A35139  Terracota (primary dark — hover, pressed, texto sobre âmbar claro)
+
+/* — Base — */
+#000000  Preto (texto principal em fundos claros)
+#FFFFFF  Branco (texto em fundos escuros, ícones sobre âmbar)
+
+/* — Fontes de vídeo (badges) — */
+#FF0000  Vermelho YouTube
+#010101  Preto TikTok
+#C13584  Roxo Instagram
 ```
 → Definida em `src/constants/theme.ts`
+
+**Tokens de cor para o theme.ts:**
+```typescript
+export const colors = {
+  // Backgrounds
+  bgDark:       '#1B2632',
+  bgDarkAlt:    '#2C3B4D',
+  // Neutros
+  border:       '#C9C1B1',
+  bgLight:      '#EEE9DF',
+  // Accent
+  primary:      '#FFB162',
+  primaryDark:  '#A35139',
+  // Base
+  black:        '#000000',
+  white:        '#FFFFFF',
+  // Texto
+  textPrimary:  '#000000',   // em fundos claros
+  textInverted: '#FFFFFF',   // em fundos escuros / sobre primary
+  textMuted:    '#C9C1B1',   // labels secundários
+  // Fontes de vídeo
+  youtube:      '#FF0000',
+  tiktok:       '#010101',
+  instagram:    '#C13584',
+  emealia:      '#FFB162',
+};
+```
 
 **Tipografia:**
 | Token | Uso |
@@ -60,19 +96,67 @@ Agrega receitas de blogs, YouTube, TikTok e Instagram numa experiência unificad
 
 ## Stack tecnológica
 
+**Plataformas de distribuição: iOS (App Store) + Android (Google Play)**
+O projecto gera builds nativos para ambas as plataformas a partir de uma única codebase React Native. Usar EAS Build (Expo Application Services) para compilar e distribuir.
+
 | Camada | Tecnologia | Porquê |
 |---|---|---|
-| Mobile | React Native + Expo | iOS + Android numa codebase, deploy rápido |
+| Mobile | React Native + Expo 55 | iOS + Android numa codebase, OTA updates, EAS Build |
+| Build | EAS Build (Expo) | Builds iOS (.ipa) e Android (.aab) na cloud sem Xcode/Android Studio local |
 | Backend | Supabase (EU — Frankfurt) | Auth + DB + Edge Functions, GDPR-compliant |
 | Receitas | Spoonacular API | 365k+ receitas, pesquisa por ingredientes, macros |
 | Vídeos | YouTube Data API v3 | Feed de receitas em vídeo, gratuito até 10k unidades/dia |
 | Produtos | Open Food Facts | Scanning de código de barras, base de dados open source |
-| Subscrições | RevenueCat | Gestão de in-app purchases iOS + Android |
+| Subscrições | RevenueCat | Gestão de in-app purchases iOS (StoreKit 2) + Android (Google Play Billing) |
 | Cache | Redis (Railway) | Cache de respostas Spoonacular (obrigatório — max 1h) |
 | Estado global | Zustand | Estado simples e performante |
+| SVG | react-native-svg + react-native-svg-transformer | Logos e ícones escaláveis |
+| Notificações | Expo Push Notifications | Sugestões de jantar + alertas de despensa |
 
 **Versões:** Expo 55, React 19.2.0, React Native 0.83.2
 **Nota:** Usar sempre `npm install` (não `npx expo install`) — o `.npmrc` tem `legacy-peer-deps=true`
+
+**Configuração EAS Build:**
+```json
+// eas.json
+{
+  "cli": { "version": ">= 10.0.0" },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal",
+      "ios": { "simulator": false },
+      "android": { "buildType": "apk" }
+    },
+    "production": {
+      "ios": { "buildType": "release" },
+      "android": { "buildType": "app-bundle" }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
+```
+
+**Comandos de build:**
+```bash
+# Build de produção iOS (.ipa → App Store)
+eas build --platform ios --profile production
+
+# Build de produção Android (.aab → Google Play)
+eas build --platform android --profile production
+
+# Build de desenvolvimento (ambas as plataformas)
+eas build --platform all --profile development
+
+# Submit directo às stores
+eas submit --platform ios
+eas submit --platform android
+```
 
 **Regras críticas de API:**
 - `YOUTUBE_API_KEY` — nunca no cliente; apenas em Edge Functions do Supabase
@@ -357,32 +441,41 @@ EXPO_PUBLIC_REVENUECAT_ANDROID_KEY=goog_xxx
 **MVP — Fase 1** (a iniciar)
 
 **Estado do setup:**
-- [ ] Projecto Expo criado
+- [ ] Projecto Expo criado (`npx create-expo-app eMealia`)
 - [ ] `.npmrc` com `legacy-peer-deps=true`
 - [ ] `metro.config.js` com SVG transformer
 - [ ] `tsconfig.json` com path alias `@/`
+- [ ] `eas.json` configurado (development / preview / production)
+- [ ] `app.json` com `bundleIdentifier` iOS e `package` Android definidos
 - [ ] Estrutura de pastas `src/` criada
-- [ ] `src/constants/theme.ts` com paleta e tipografia eMealia
+- [ ] `src/constants/theme.ts` com paleta eMealia (cores da imagem de referência)
 - [ ] `src/lib/supabase.ts` configurado (região EU Frankfurt)
 - [ ] `src/types/` com tipos base (recipe, feed, pantry)
 - [ ] `app/_layout.tsx` com fontes carregadas
 - [ ] `supabase/schema.sql` criado e executado no Supabase
 - [ ] `.env` preenchido com valores reais
+- [ ] EAS CLI instalado: `npm install -g eas-cli && eas login`
 
 **Dependências a instalar:**
 - `@supabase/supabase-js` + `expo-secure-store` + `expo-crypto`
 - `expo-router` + `expo-linking` + `expo-constants`
-- `expo-font` + `expo-camera` (barcode scanner)
+- `expo-font` + `expo-notifications` + `expo-device`
+- `expo-camera` (barcode scanner) + `expo-image-picker`
 - `react-native-svg` + `react-native-svg-transformer`
 - `react-native-gesture-handler` + `react-native-reanimated@3.x`
 - `react-native-safe-area-context` + `react-native-screens`
 - `zustand`
 - `react-native-purchases` (RevenueCat)
+- `nativewind` + `tailwindcss`
 
-**⚠️ Nota de versão importante:**
-`react-native-reanimated` deve ser sempre a versão `3.x` neste projecto.
-A versão `4.x` requer `react-native-worklets` que não é compatível com Expo 55.
-Nunca fazer `npx expo install react-native-reanimated` sem fixar a versão.
+**⚠️ Notas de versão importantes (herdadas do Manna):**
+- `react-native-reanimated` deve ser sempre a versão `3.x` — nunca instalar sem fixar versão.
+  A versão `4.x` requer `react-native-worklets`, incompatível com Expo 55.
+  Nunca fazer `npx expo install react-native-reanimated` sem fixar: `npm install react-native-reanimated@3.16.7`
+- Usar sempre `npm install` (não `npx expo install`) — o `.npmrc` tem `legacy-peer-deps=true`
+- EAS Build requer conta Expo com `eas-cli` instalado globalmente: `npm install -g eas-cli`
+- Para build iOS em produção, requer Apple Developer Account activa (€99/ano)
+- Para build Android em produção, requer Google Play Console activa (taxa única $25)
 
 **Features MVP a implementar:**
 - [ ] F01 — Autenticação (login, registo, protecção de rotas)
