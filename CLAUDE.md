@@ -516,3 +516,54 @@ EXPO_PUBLIC_REVENUECAT_ANDROID_KEY=goog_xxx
 - Open Food Facts API: https://world.openfoodfacts.org/data
 - RevenueCat docs: https://docs.revenuecat.com
 - Supabase Edge Functions: https://supabase.com/docs/guides/functions
+
+---
+
+## Atualização da arquitectura — Monorepo (Junho 2026)
+
+O projecto foi convertido para **monorepo** para suportar iOS + Android + **Web**.
+
+```
+eMealia/                          ← raiz do monorepo
+├── apps/
+│   ├── mobile/                   → Expo 55 (iOS + Android)
+│   │   ├── app/                  → Expo Router (ecrãs)
+│   │   └── src/                  → componentes, hooks, stores, lib
+│   └── web/                      → Next.js 15 (web)
+│       ├── app/                  → App Router Next.js
+│       ├── components/           → componentes React
+│       └── lib/supabase/         → cliente server + browser
+├── packages/
+│   ├── types/                    → tipos TypeScript partilhados (@emealia/types)
+│   ├── supabase/                 → queries partilhadas (@emealia/supabase)
+│   └── config/                   → cores, planos, limites (@emealia/config)
+├── supabase/
+│   ├── schema.sql                → schema completo + RLS
+│   └── functions/                → Edge Functions (YouTube + Spoonacular)
+├── turbo.json                    → Turborepo
+└── package.json                  → workspaces npm
+```
+
+**Comandos de desenvolvimento:**
+```bash
+# Instalar tudo (raiz)
+npm install
+
+# Mobile
+npm run mobile          # ou: cd apps/mobile && npx expo start
+
+# Web
+npm run web              # ou: cd apps/web && npm run dev
+
+# Typecheck global
+npm run typecheck
+```
+
+**Imports partilhados:**
+```typescript
+import type { Recipe, PantryItem, VideoItem } from '@emealia/types';
+import { getFeed, savePantryItem }            from '@emealia/supabase';
+import { colors, PLANS, FILTROS_DIETETICOS }  from '@emealia/config';
+```
+
+**Regra:** lógica de negócio e queries → `packages/`. UI e ecrãs → `apps/`.

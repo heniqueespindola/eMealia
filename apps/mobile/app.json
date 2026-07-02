@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "eMealia",
+    "slug": "emealia",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1B2632"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.mocruz.emealia",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Usado para escanear códigos de barras de produtos alimentares.",
+        "NSPhotoLibraryUsageDescription": "Usado para escolher foto de perfil."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#1B2632"
+      },
+      "package": "com.mocruz.emealia",
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE"]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-secure-store",
+      [
+        "expo-camera",
+        { "cameraPermission": "Usado para escanear códigos de barras de produtos alimentares." }
+      ]
+    ],
+    "scheme": "emealia",
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
