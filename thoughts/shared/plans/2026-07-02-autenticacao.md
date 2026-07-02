@@ -2,7 +2,7 @@
 data: 2026-07-02
 feature: "Autenticação (F01) — login, registo e protecção de rotas"
 research: "thoughts/shared/research/2026-07-02-autenticacao.md"
-status: aguarda_implementacao
+status: completo
 ---
 
 # Spec: Autenticação (F01)

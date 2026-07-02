@@ -23,11 +23,11 @@ export const colors = {
 } as const;
 
 export const fonts = {
-  display:  'PlayfairDisplay-Bold',
-  regular:  'Inter-Regular',
-  medium:   'Inter-Medium',
-  semibold: 'Inter-SemiBold',
-  bold:     'Inter-Bold',
+  display:  'PlayfairDisplay_700Bold',
+  regular:  'Inter_400Regular',
+  medium:   'Inter_500Medium',
+  semibold: 'Inter_600SemiBold',
+  bold:     'Inter_700Bold',
 } as const;
 
 export const spacing = {

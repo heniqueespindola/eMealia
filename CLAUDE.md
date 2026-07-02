@@ -101,7 +101,7 @@ O projecto gera builds nativos para ambas as plataformas a partir de uma única 
 
 | Camada | Tecnologia | Porquê |
 |---|---|---|
-| Mobile | React Native + Expo 55 | iOS + Android numa codebase, OTA updates, EAS Build |
+| Mobile | React Native + Expo 53 | iOS + Android numa codebase, OTA updates, EAS Build |
 | Build | EAS Build (Expo) | Builds iOS (.ipa) e Android (.aab) na cloud sem Xcode/Android Studio local |
 | Backend | Supabase (EU — Frankfurt) | Auth + DB + Edge Functions, GDPR-compliant |
 | Receitas | Spoonacular API | 365k+ receitas, pesquisa por ingredientes, macros |
@@ -113,7 +113,7 @@ O projecto gera builds nativos para ambas as plataformas a partir de uma única 
 | SVG | react-native-svg + react-native-svg-transformer | Logos e ícones escaláveis |
 | Notificações | Expo Push Notifications | Sugestões de jantar + alertas de despensa |
 
-**Versões:** Expo 55, React 19.2.0, React Native 0.83.2
+**Versões:** Expo 53.0.27, React 18.3.1, React Native 0.76.7
 **Nota:** Usar sempre `npm install` (não `npx expo install`) — o `.npmrc` tem `legacy-peer-deps=true`
 
 **Configuração EAS Build:**
@@ -470,7 +470,7 @@ EXPO_PUBLIC_REVENUECAT_ANDROID_KEY=goog_xxx
 
 **⚠️ Notas de versão importantes (herdadas do Manna):**
 - `react-native-reanimated` deve ser sempre a versão `3.x` — nunca instalar sem fixar versão.
-  A versão `4.x` requer `react-native-worklets`, incompatível com Expo 55.
+  A versão `4.x` requer `react-native-worklets`, incompatível com Expo 53.
   Nunca fazer `npx expo install react-native-reanimated` sem fixar: `npm install react-native-reanimated@3.16.7`
 - Usar sempre `npm install` (não `npx expo install`) — o `.npmrc` tem `legacy-peer-deps=true`
 - EAS Build requer conta Expo com `eas-cli` instalado globalmente: `npm install -g eas-cli`
@@ -526,7 +526,7 @@ O projecto foi convertido para **monorepo** para suportar iOS + Android + **Web*
 ```
 eMealia/                          ← raiz do monorepo
 ├── apps/
-│   ├── mobile/                   → Expo 55 (iOS + Android)
+│   ├── mobile/                   → Expo 53 (iOS + Android)
 │   │   ├── app/                  → Expo Router (ecrãs)
 │   │   └── src/                  → componentes, hooks, stores, lib
 │   └── web/                      → Next.js 15 (web)

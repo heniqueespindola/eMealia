@@ -94,20 +94,16 @@ Abre em: **http://localhost:3000**
 > Requer macOS com Xcode instalado.
 
 ```bash
-# Da raiz do monorepo
-npm run mobile
-
-# Ou directamente na pasta mobile
 cd apps/mobile
+npm install --legacy-peer-deps
 npm run ios
-# equivalente a: npx expo start --ios
 ```
 
-O Simulador iOS abre automaticamente.  
-Se não tiveres o Xcode instalado:
-```bash
-xcode-select --install
-```
+O Simulador iOS abre automaticamente.
+
+> Se não tiveres o Xcode instalado: `xcode-select --install`
+
+**Nota:** O `--legacy-peer-deps` é necessário porque o mobile gere as suas dependências de forma isolada do monorepo, evitando conflitos de versões com pacotes Expo.
 
 ---
 

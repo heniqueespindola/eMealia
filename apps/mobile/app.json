@@ -4,11 +4,9 @@
     "slug": "emealia",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "https://via.placeholder.com/1024",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
       "backgroundColor": "#1B2632"
     },
     "ios": {
@@ -21,14 +19,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#1B2632"
       },
       "package": "com.mocruz.emealia",
       "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE"]
     },
     "web": {
-      "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
     "plugins": [
@@ -42,7 +38,7 @@
     ],
     "scheme": "emealia",
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": false
     }
   }
 }
