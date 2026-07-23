@@ -1,5 +1,6 @@
 -- eMealia — Schema Supabase (Frankfurt — EU)
 -- Executar em: Supabase Dashboard > SQL Editor
+-- Versão idempotente: pode ser corrida múltiplas vezes sem erros
 
 -- ─── Profiles (extende auth.users)
 CREATE TABLE IF NOT EXISTS profiles (
@@ -12,10 +13,14 @@ CREATE TABLE IF NOT EXISTS profiles (
   revenuecat_id      text,
   gdpr_consent       boolean   DEFAULT false,
   gdpr_consent_at    timestamptz,
+  frequencia_cozinha int CHECK (frequencia_cozinha BETWEEN 0 AND 7),
+  onboarding_completo boolean DEFAULT false,
   created_at         timestamptz DEFAULT now()
 );
 
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "profiles: só o próprio" ON profiles;
 CREATE POLICY "profiles: só o próprio"
   ON profiles FOR ALL USING (auth.uid() = id);
 
@@ -30,7 +35,8 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE TRIGGER on_auth_user_created
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION handle_new_user();
 
@@ -46,9 +52,12 @@ CREATE TABLE IF NOT EXISTS pantry_items (
 );
 
 ALTER TABLE pantry_items ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "pantry: só o próprio" ON pantry_items;
 CREATE POLICY "pantry: só o próprio"
   ON pantry_items FOR ALL USING (auth.uid() = user_id);
-CREATE INDEX pantry_items_user_id_idx ON pantry_items(user_id);
+
+CREATE INDEX IF NOT EXISTS pantry_items_user_id_idx ON pantry_items(user_id);
 
 -- ─── Saved Recipes
 CREATE TABLE IF NOT EXISTS saved_recipes (
@@ -67,9 +76,12 @@ CREATE TABLE IF NOT EXISTS saved_recipes (
 );
 
 ALTER TABLE saved_recipes ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "saved_recipes: só o próprio" ON saved_recipes;
 CREATE POLICY "saved_recipes: só o próprio"
   ON saved_recipes FOR ALL USING (auth.uid() = user_id);
-CREATE INDEX saved_recipes_user_id_idx ON saved_recipes(user_id);
+
+CREATE INDEX IF NOT EXISTS saved_recipes_user_id_idx ON saved_recipes(user_id);
 
 -- ─── Meal Plan
 CREATE TABLE IF NOT EXISTS meal_plan (
@@ -85,6 +97,8 @@ CREATE TABLE IF NOT EXISTS meal_plan (
 );
 
 ALTER TABLE meal_plan ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "meal_plan: só o próprio" ON meal_plan;
 CREATE POLICY "meal_plan: só o próprio"
   ON meal_plan FOR ALL USING (auth.uid() = user_id);
 
@@ -100,6 +114,8 @@ CREATE TABLE IF NOT EXISTS shopping_list (
 );
 
 ALTER TABLE shopping_list ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "shopping_list: só o próprio" ON shopping_list;
 CREATE POLICY "shopping_list: só o próprio"
   ON shopping_list FOR ALL USING (auth.uid() = user_id);
 
@@ -118,5 +134,5 @@ CREATE TABLE IF NOT EXISTS video_cache (
   cached_at         timestamptz DEFAULT now()
 );
 
-CREATE INDEX video_cache_filtros_idx ON video_cache USING GIN(filtros);
-CREATE INDEX video_cache_views_idx   ON video_cache(views DESC);
+CREATE INDEX IF NOT EXISTS video_cache_filtros_idx ON video_cache USING GIN(filtros);
+CREATE INDEX IF NOT EXISTS video_cache_views_idx   ON video_cache(views DESC);

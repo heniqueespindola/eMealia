@@ -23,5 +23,7 @@ export interface Profile {
   revenuecat_id:         string | null;
   gdpr_consent:          boolean;
   gdpr_consent_at:       string | null;
+  frequencia_cozinha:    number | null;
+  onboarding_completo:   boolean;
   created_at:            string;
 }
