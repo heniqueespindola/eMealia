@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { Button } from '@/components/ui/Button';
 import { Pill } from '@/components/ui/Pill';
 import { StepIndicator } from '@/components/ui/StepIndicator';
+import { BackButton } from '@/components/ui/BackButton';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { INGREDIENTES_COMUNS } from '@/constants/onboarding';
 import { colors, fonts } from '@/constants/theme';
@@ -29,6 +30,8 @@ export default function OnboardingStep2() {
       style={{ flex: 1, backgroundColor: colors.bgLight }}
       contentContainerStyle={{ flexGrow: 1, padding: 24, justifyContent: 'center' }}
     >
+      <BackButton />
+
       <StepIndicator current={2} total={3} />
 
       <Text style={{ fontFamily: fonts.display, fontSize: 28, color: colors.textPrimary, textAlign: 'center', marginBottom: 12 }}>

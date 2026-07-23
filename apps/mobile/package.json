@@ -5,7 +5,7 @@
   "main": "expo-router/entry",
   "scripts": {
     "dev": "expo start",
-    "ios": "expo start --ios",
+    "ios": "expo start --ios --localhost",
     "android": "expo start --android",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx"
@@ -16,6 +16,7 @@
     "@emealia/types": "file:../../packages/types",
     "@expo-google-fonts/inter": "^0.2.3",
     "@expo-google-fonts/playfair-display": "^0.2.3",
+    "@react-native-async-storage/async-storage": "2.1.2",
     "@supabase/supabase-js": "^2.43.0",
     "expo": "~53.0.0",
     "expo-camera": "~16.1.11",

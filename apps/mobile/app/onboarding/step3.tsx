@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import { useRouter } from 'expo-router';
 import { Button } from '@/components/ui/Button';
 import { Pill } from '@/components/ui/Pill';
 import { StepIndicator } from '@/components/ui/StepIndicator';
+import { BackButton } from '@/components/ui/BackButton';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
 import { updateProfile, addPantryItems } from '@emealia/supabase';
@@ -14,7 +14,6 @@ import { colors, fonts } from '@/constants/theme';
 import type { FiltroDietetico } from '@emealia/types';
 
 export default function OnboardingStep3() {
-  const router = useRouter();
   const { user } = useAuth();
   const filtrosFavoritos  = useOnboardingStore((s) => s.filtrosFavoritos);
   const frequenciaCozinha = useOnboardingStore((s) => s.frequenciaCozinha);
@@ -31,7 +30,12 @@ export default function OnboardingStep3() {
   }
 
   async function handleConcluir() {
-    if (!user || frequencia === null) return;
+    if (frequencia === null) return;
+
+    if (!user) {
+      setError('Sessão expirada. Volta a fazer login e tenta novamente.');
+      return;
+    }
 
     setError('');
     setLoading(true);
@@ -39,27 +43,36 @@ export default function OnboardingStep3() {
       const { filtrosDieteticos, ingredientesIniciais } = useOnboardingStore.getState();
       const filtrosUnidos = [...new Set([...filtrosDieteticos, ...filtrosFavoritosSelecionados])];
 
-      await updateProfile(supabase!, user.id, {
+      const { data: updatedProfile, error: updateError } = await updateProfile(supabase!, user.id, {
         filtros_dieteticos:  filtrosUnidos,
         frequencia_cozinha:  frequencia,
         onboarding_completo: true,
       });
 
-      if (ingredientesIniciais.length > 0) {
-        await addPantryItems(supabase!, ingredientesIniciais.map((nome) => ({
-          user_id: user.id, nome, quantidade: null, barcode: null, expira_em: null,
-        })));
+      if (updateError || !updatedProfile) {
+        console.error('[onboarding] updateProfile falhou:', updateError);
+        setError('Não foi possível guardar o teu perfil. Tenta novamente.');
+        return;
       }
 
-      useProfileStore.getState().setProfile({
-        ...useProfileStore.getState().profile!,
-        filtros_dieteticos:  filtrosUnidos,
-        frequencia_cozinha:  frequencia,
-        onboarding_completo: true,
-      });
+      if (ingredientesIniciais.length > 0) {
+        const { error: pantryError } = await addPantryItems(supabase!, ingredientesIniciais.map((nome) => ({
+          user_id: user.id, nome, quantidade: null, barcode: null, expira_em: null,
+        })));
+        if (pantryError) {
+          console.error('[onboarding] addPantryItems falhou:', pantryError);
+          // Não bloqueia o fluxo — a despensa pode ser preenchida mais tarde.
+        }
+      }
+
+      console.log('[onboarding] profile atualizado com sucesso:', JSON.stringify(updatedProfile));
+      useProfileStore.getState().setProfile(updatedProfile);
       useOnboardingStore.getState().reset();
-      router.replace('/(tabs)');
+      // Nota: não navegamos manualmente aqui. O _layout.tsx raiz observa
+      // `profile.onboarding_completo` e o Stack.Protected redireciona para
+      // '/(tabs)' automaticamente assim que o estado atualiza.
     } catch (err) {
+      console.error('[onboarding] handleConcluir exceção:', err);
       setError('Não foi possível concluir o onboarding. Tenta novamente.');
     } finally {
       setLoading(false);
@@ -71,6 +84,8 @@ export default function OnboardingStep3() {
       style={{ flex: 1, backgroundColor: colors.bgLight }}
       contentContainerStyle={{ flexGrow: 1, padding: 24, justifyContent: 'center' }}
     >
+      <BackButton />
+
       <StepIndicator current={3} total={3} />
 
       <Text style={{ fontFamily: fonts.display, fontSize: 28, color: colors.textPrimary, textAlign: 'center', marginBottom: 12 }}>

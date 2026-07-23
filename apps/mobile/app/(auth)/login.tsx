@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { Link } from 'expo-router';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/hooks/useAuth';
@@ -9,7 +9,6 @@ import { colors, fonts } from '@/constants/theme';
 
 export default function LoginScreen() {
   const { signIn } = useAuth();
-  const router = useRouter();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,7 +25,9 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       await signIn(email.trim(), password);
-      router.replace('/(tabs)');
+      // Nota: não navegamos manualmente aqui. O _layout.tsx raiz reage à
+      // mudança de `session` e faz o redirect (para onboarding ou tabs,
+      // consoante o perfil) assim que a sessão fica disponível.
     } catch (err) {
       setError(getAuthErrorMessage(err));
     } finally {

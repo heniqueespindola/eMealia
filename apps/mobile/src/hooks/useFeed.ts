@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { MOCK_VIDEOS } from '@/constants/mockFeed';
 import type { VideoItem, FiltroDietetico } from '@emealia/types';
 
-export function useFeed(filtro?: FiltroDietetico) {
+function countMatches(videoFiltros: FiltroDietetico[], perfilFiltros: FiltroDietetico[]): number {
+  return videoFiltros.filter((f) => perfilFiltros.includes(f)).length;
+}
+
+export function useFeed(filtro?: FiltroDietetico, filtrosPerfil: FiltroDietetico[] = []) {
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,13 +26,24 @@ export function useFeed(filtro?: FiltroDietetico) {
       }
 
       const { data, error } = await query;
-      if (error) setError(error.message);
-      else setVideos(data as VideoItem[]);
+      if (error) {
+        setError(error.message);
+      } else {
+        const baseVideos = data.length === 0
+          ? MOCK_VIDEOS.filter((v) => !filtro || v.filtros.includes(filtro))
+          : (data as VideoItem[]);
+
+        const sorted = filtrosPerfil.length > 0
+          ? [...baseVideos].sort((a, b) => countMatches(b.filtros, filtrosPerfil) - countMatches(a.filtros, filtrosPerfil))
+          : baseVideos;
+
+        setVideos(sorted);
+      }
       setLoading(false);
     }
 
     fetchFeed();
-  }, [filtro]);
+  }, [filtro, filtrosPerfil.join(',')]);
 
   return { videos, loading, error };
 }

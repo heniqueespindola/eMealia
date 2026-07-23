@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { Link } from 'expo-router';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/hooks/useAuth';
@@ -10,7 +10,6 @@ import { colors, fonts, radius } from '@/constants/theme';
 
 export default function RegisterScreen() {
   const { signUp } = useAuth();
-  const router = useRouter();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -43,7 +42,10 @@ export default function RegisterScreen() {
           .update({ gdpr_consent: true, gdpr_consent_at: new Date().toISOString() })
           .eq('id', data.user.id);
       }
-      router.replace('/onboarding/step1');
+      // Nota: não navegamos manualmente aqui. O _layout.tsx raiz reage à
+      // mudança de `session`/`profile` e faz o redirect para o onboarding
+      // assim que a sessão fica disponível (ou para o login, se o Supabase
+      // exigir confirmação de email antes de criar sessão).
     } catch (err) {
       setError(getAuthErrorMessage(err));
     } finally {
