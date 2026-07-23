@@ -19,3 +19,10 @@ export async function addPantryItem(
 export async function deletePantryItem(client: SupabaseClient<Database>, id: string) {
   return client.from('pantry_items').delete().eq('id', id);
 }
+
+export async function addPantryItems(
+  client: SupabaseClient<Database>,
+  items: Omit<PantryItem, 'id' | 'created_at'>[]
+) {
+  return client.from('pantry_items').insert(items).select();
+}
