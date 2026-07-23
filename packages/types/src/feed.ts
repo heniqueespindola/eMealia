@@ -14,4 +14,5 @@ export interface VideoItem {
   filtros:       FiltroDietetico[];
   ingredientes_chave: string[];
   cached_at:     string;
+  fonte?:        VideoSource; // ausente em video_cache (YouTube-only); presente em dados mock
 }

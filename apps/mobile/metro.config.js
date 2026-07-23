@@ -3,22 +3,21 @@ const { getDefaultConfig } = require('expo/metro-config');
 const { withNativeWind } = require('nativewind/metro');
 
 const projectRoot = __dirname;
-const workspaceRoot = path.resolve(projectRoot, '../..');
+const packagesRoot = path.resolve(projectRoot, '../../packages');
 
 const config = getDefaultConfig(projectRoot);
 
-// Monorepo: observar a raiz do workspace para apanhar mudanças nos packages @emealia/*
-config.watchFolders = [workspaceRoot];
-
-// Monorepo: procurar módulos tanto no node_modules local como no da raiz
-config.resolver.nodeModulesPaths = [
-  path.resolve(projectRoot, 'node_modules'),
-  path.resolve(workspaceRoot, 'node_modules'),
-];
-
-// Necessário para o Metro seguir corretamente os symlinks criados pelo npm workspaces / file:
+// Necessário para o Metro seguir os symlinks criados pelo npm para os
+// packages locais do monorepo (@emealia/supabase, @emealia/types, etc.,
+// instalados via "file:../../packages/*").
 config.resolver.unstable_enableSymlinks = true;
-config.resolver.disableHierarchicalLookup = false;
+
+// Observa APENAS a pasta packages/ do monorepo (não a raiz inteira) para
+// o Metro conseguir atravessar o symlink e encontrar o conteúdo real dos
+// packages @emealia/*. Evitamos apontar para a raiz do monorepo inteira
+// (que tem o seu próprio node_modules com react/react-dom para a app
+// Next.js) para não arriscar resolução de módulos duplicados/conflituosos.
+config.watchFolders = [packagesRoot];
 
 // SVG transformer
 const { transformer, resolver } = config;

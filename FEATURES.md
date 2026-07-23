@@ -308,8 +308,8 @@ Incluir pedido de permissão no onboarding (Passo 3).
 
 | # | Feature | Fase | Plano mínimo |
 |---|---|---|---|
-| F01 | Autenticação | MVP | Todos |
-| F02 | Onboarding | MVP | Todos |
+| F01 | Autenticação | MVP | Todos | DONE
+| F02 | Onboarding | MVP | Todos | DONE
 | F03 | Homepage + feed de vídeos | MVP | Todos |
 | F04 | Pesquisa por ingredientes | MVP | Todos |
 | F05 | Despensa / inventário | MVP | Todos (limite grátis) |
