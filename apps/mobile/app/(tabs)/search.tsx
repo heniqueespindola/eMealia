@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { View, Text, FlatList, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useLocalSearchParams } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
 import { usePantry } from '@/hooks/usePantry';
 import { useRecipeSearch } from '@/hooks/useRecipeSearch';
@@ -18,7 +19,8 @@ import type { RecipeSearchResult } from '@emealia/types';
 
 export default function SearchScreen() {
   const { user } = useAuth();
-  const { items: pantryItems } = usePantry(user?.id ?? '');
+  const { usarDespensa: usarDespensaParam } = useLocalSearchParams<{ usarDespensa?: string }>();
+  const { items: pantryItems } = usePantry(user?.id);
   const { ingredients, filtros, results, loading, addIngredient, removeIngredient, toggleFiltro, usarDespensa } =
     useRecipeSearch();
   const [inputText, setInputText] = useState('');
@@ -32,6 +34,13 @@ export default function SearchScreen() {
       setSavedMap(new Map((data ?? []).map((r) => [r.recipe_id, r.id])));
     });
   }, [user?.id]);
+
+  useEffect(() => {
+    if (usarDespensaParam === '1' && !usandoDespensa && pantryItems.length > 0) {
+      setUsandoDespensa(true);
+      usarDespensa(pantryItems);
+    }
+  }, [usarDespensaParam, usandoDespensa, pantryItems]);
 
   function handleSubmitIngredient() {
     if (inputText.trim()) {

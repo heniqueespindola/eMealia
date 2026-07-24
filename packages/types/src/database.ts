@@ -1,5 +1,5 @@
 import type { Profile } from './user';
-import type { PantryItem, ShoppingListItem } from './pantry';
+import type { CategoriaDespensa, PantryItem, ShoppingListItem } from './pantry';
 import type { SavedRecipe } from './recipe';
 import type { VideoItem } from './feed';
 
@@ -19,7 +19,7 @@ export interface Database {
       };
       pantry_items: {
         Row:           Simplify<PantryItem>;
-        Insert:        Simplify<Omit<PantryItem, 'id' | 'created_at'>>;
+        Insert:        Simplify<Omit<PantryItem, 'id' | 'created_at' | 'categoria'> & { categoria?: CategoriaDespensa }>;
         Update:        Simplify<Partial<PantryItem>>;
         Relationships: [];
       };

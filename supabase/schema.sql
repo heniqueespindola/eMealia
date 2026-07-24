@@ -59,6 +59,10 @@ CREATE POLICY "pantry: só o próprio"
 
 CREATE INDEX IF NOT EXISTS pantry_items_user_id_idx ON pantry_items(user_id);
 
+ALTER TABLE pantry_items
+  ADD COLUMN IF NOT EXISTS categoria text NOT NULL DEFAULT 'outros'
+  CHECK (categoria IN ('frescos','secos','congelados','outros'));
+
 -- ─── Saved Recipes
 CREATE TABLE IF NOT EXISTS saved_recipes (
   id            uuid        DEFAULT gen_random_uuid() PRIMARY KEY,
