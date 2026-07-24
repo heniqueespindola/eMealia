@@ -1,23 +1,36 @@
 import { View, Text } from 'react-native';
 import { colors, fonts, radius } from '@/constants/theme';
-import type { VideoSource } from '@emealia/types';
+import type { RecipeSource } from '@emealia/types';
 
 interface SourceBadgeProps {
-  fonte: VideoSource;
+  fonte: RecipeSource;
 }
 
-const LABELS: Record<VideoSource, string> = {
-  youtube:   'YouTube',
-  tiktok:    'TikTok',
-  instagram: 'Instagram',
-  emealia:   'eMealia',
+const LABELS: Record<RecipeSource, string> = {
+  youtube:     'YouTube',
+  tiktok:      'TikTok',
+  instagram:   'Instagram',
+  emealia:     'eMealia',
+  spoonacular: 'Spoonacular',
+  blog:        'Blog',
 };
+
+const BACKGROUND: Record<RecipeSource, string> = {
+  youtube:     colors.youtube,
+  tiktok:      colors.tiktok,
+  instagram:   colors.instagram,
+  emealia:     colors.emealia,
+  spoonacular: colors.emealia,
+  blog:        colors.emealia,
+};
+
+const TEXTO_ESCURO: RecipeSource[] = ['emealia', 'spoonacular', 'blog'];
 
 export function SourceBadge({ fonte }: SourceBadgeProps) {
   return (
     <View
       style={{
-        backgroundColor: colors[fonte],
+        backgroundColor: BACKGROUND[fonte],
         borderRadius:    radius.sm,
         paddingHorizontal: 8,
         paddingVertical:   4,
@@ -27,7 +40,7 @@ export function SourceBadge({ fonte }: SourceBadgeProps) {
         style={{
           fontFamily: fonts.medium,
           fontSize:   11,
-          color:      fonte === 'emealia' ? colors.primaryDark : colors.textInverted,
+          color:      TEXTO_ESCURO.includes(fonte) ? colors.primaryDark : colors.textInverted,
         }}
       >
         {LABELS[fonte]}

@@ -23,11 +23,12 @@ export default function TabsLayout() {
         tabBarInactiveTintColor: colors.textMuted,
       }}
     >
-      <Tabs.Screen name="index"    options={{ title: 'Início' }} />
-      <Tabs.Screen name="search"   options={{ title: 'Pesquisar' }} />
-      <Tabs.Screen name="pantry"   options={{ title: 'Despensa' }} />
-      <Tabs.Screen name="planner"  options={{ title: 'Plano' }} />
-      <Tabs.Screen name="profile"  options={{ title: 'Perfil' }} />
+      <Tabs.Screen name="index"      options={{ title: 'Início' }} />
+      <Tabs.Screen name="search"     options={{ title: 'Pesquisar' }} />
+      <Tabs.Screen name="favoritos"  options={{ title: 'Favoritos' }} />
+      <Tabs.Screen name="pantry"     options={{ title: 'Despensa' }} />
+      <Tabs.Screen name="planner"    options={{ title: 'Plano' }} />
+      <Tabs.Screen name="profile"    options={{ title: 'Perfil' }} />
     </Tabs>
   );
 }
