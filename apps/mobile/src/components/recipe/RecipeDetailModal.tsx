@@ -7,12 +7,22 @@ import { FILTROS_DIETETICOS } from '@emealia/config';
 import type { SavedRecipe } from '@emealia/types';
 
 interface RecipeDetailModalProps {
-  visible: boolean;
-  recipe:  SavedRecipe | null;
-  onClose: () => void;
+  visible:             boolean;
+  recipe:              SavedRecipe | null;
+  onClose:             () => void;
+  onAddToList:         () => void;
+  podeAdicionarLista:  boolean;
+  addingToList?:       boolean;
 }
 
-export function RecipeDetailModal({ visible, recipe, onClose }: RecipeDetailModalProps) {
+export function RecipeDetailModal({
+  visible,
+  recipe,
+  onClose,
+  onAddToList,
+  podeAdicionarLista,
+  addingToList,
+}: RecipeDetailModalProps) {
   if (!recipe) return null;
 
   function handleOpenSource() {
@@ -87,6 +97,19 @@ export function RecipeDetailModal({ visible, recipe, onClose }: RecipeDetailModa
         </View>
 
         <Button label="Abrir receita original" onPress={handleOpenSource} disabled={!recipe.source_url} />
+
+        <View style={{ marginTop: spacing.sm }}>
+          <Button
+            label="Adicionar à lista de compras"
+            onPress={onAddToList}
+            disabled={!podeAdicionarLista || addingToList}
+          />
+          {!podeAdicionarLista && (
+            <Text style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.textMuted, marginTop: spacing.sm }}>
+              Esta receita não tem lista de ingredientes estruturada — adiciona os itens manualmente na lista de compras.
+            </Text>
+          )}
+        </View>
       </ScrollView>
     </Modal>
   );

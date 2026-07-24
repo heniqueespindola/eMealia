@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, SectionList, RefreshControl } from 'react-native';
+import { View, Text, Pressable, SectionList, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { PantryItemCard } from '@/components/pantry/PantryItemCard';
 import { PantryItemForm } from '@/components/pantry/PantryItemForm';
+import { ShoppingListModal } from '@/components/shopping/ShoppingListModal';
 import { agruparPorCategoria } from '@/constants/pantry';
 import { colors, fonts, spacing } from '@/constants/theme';
 import { LIMITS } from '@emealia/config';
@@ -22,6 +23,7 @@ export default function PantryScreen() {
   const [refreshing, setRefreshing]   = useState(false);
   const [formVisible, setFormVisible] = useState(false);
   const [editingItem, setEditingItem] = useState<PantryItem | null>(null);
+  const [listaVisible, setListaVisible] = useState(false);
 
   const limit        = profile?.plano === 'free' ? LIMITS.free.pantry_items : LIMITS.premium.pantry_items;
   const limitReached = items.length >= limit;
@@ -62,10 +64,23 @@ export default function PantryScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bgDark }}>
-      <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.md }}>
+      <View
+        style={{
+          flexDirection:   'row',
+          justifyContent:  'space-between',
+          alignItems:      'center',
+          paddingHorizontal: spacing.lg,
+          paddingTop:        spacing.md,
+        }}
+      >
         <Text style={{ fontFamily: fonts.display, fontSize: 24, color: colors.primary }}>
           Despensa
         </Text>
+        <Pressable onPress={() => setListaVisible(true)} hitSlop={8}>
+          <Text style={{ fontFamily: fonts.medium, fontSize: 14, color: colors.textInverted }}>
+            🛒 Lista de compras
+          </Text>
+        </Pressable>
       </View>
 
       {limitReached && (
@@ -116,6 +131,13 @@ export default function PantryScreen() {
         onSubmit={handleFormSubmit}
         initialValues={editingItem ?? undefined}
         limitReached={limitReached}
+      />
+
+      <ShoppingListModal
+        visible={listaVisible}
+        onClose={() => setListaVisible(false)}
+        userId={user?.id}
+        profile={profile}
       />
     </SafeAreaView>
   );

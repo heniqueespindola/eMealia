@@ -34,6 +34,11 @@ export interface RecipeSearchResult {
   total_ingredientes:    number;
 }
 
+export interface RecipeIngredient {
+  nome:       string;
+  quantidade: string | null;
+}
+
 export interface SavedRecipe {
   id:            string;
   user_id:       string;

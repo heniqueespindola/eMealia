@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
@@ -7,6 +7,8 @@ import { useProfile } from '@/hooks/useProfile';
 import { usePantry } from '@/hooks/usePantry';
 import { useRecipeSearch } from '@/hooks/useRecipeSearch';
 import { useIngredientAutocomplete } from '@/hooks/useIngredientAutocomplete';
+import { useShoppingList } from '@/hooks/useShoppingList';
+import { useRecipeIngredients } from '@/hooks/useRecipeIngredients';
 import { Input } from '@/components/ui/Input';
 import { Pill } from '@/components/ui/Pill';
 import { Card } from '@/components/ui/Card';
@@ -28,6 +30,8 @@ export default function SearchScreen() {
   const { items: pantryItems } = usePantry(user?.id);
   const { ingredients, filtros, results, loading, addIngredient, removeIngredient, toggleFiltro, usarDespensa } =
     useRecipeSearch();
+  const { addFromRecipe } = useShoppingList(user?.id);
+  const { fetchIngredients } = useRecipeIngredients();
   const [inputText, setInputText] = useState('');
   const [usandoDespensa, setUsandoDespensa] = useState(false);
   const suggestions = useIngredientAutocomplete(inputText);
@@ -98,6 +102,12 @@ export default function SearchScreen() {
     }
   }
 
+  async function handleAddToList(recipe: RecipeSearchResult) {
+    const ingredientes = await fetchIngredients(recipe.id);
+    const count = await addFromRecipe(recipe.id, ingredientes, pantryItems);
+    Alert.alert(count > 0 ? `${count} itens adicionados à lista` : 'Já tens tudo o que precisas em casa');
+  }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bgDark }}>
       <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.md }}>
@@ -159,6 +169,7 @@ export default function SearchScreen() {
               recipe={item}
               saved={savedMap.has(item.id)}
               onToggleSave={() => handleToggleSave(item)}
+              onAddToList={() => handleAddToList(item)}
             />
           )}
         />

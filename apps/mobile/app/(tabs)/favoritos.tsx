@@ -3,6 +3,9 @@ import { View, Text, FlatList, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/hooks/useAuth';
 import { useSavedRecipes } from '@/hooks/useSavedRecipes';
+import { usePantry } from '@/hooks/usePantry';
+import { useShoppingList } from '@/hooks/useShoppingList';
+import { useRecipeIngredients } from '@/hooks/useRecipeIngredients';
 import { Pill } from '@/components/ui/Pill';
 import { FilterRow } from '@/components/recipe/FilterRow';
 import { SavedRecipeCard } from '@/components/recipe/SavedRecipeCard';
@@ -17,6 +20,9 @@ import type { SavedRecipe, FiltroDietetico, RecipeSource } from '@emealia/types'
 export default function FavoritosScreen() {
   const { user } = useAuth();
   const { items, customColecoes, moveToColecao, createColecao, deleteColecao } = useSavedRecipes(user?.id);
+  const { items: pantryItems } = usePantry(user?.id);
+  const { addFromRecipe } = useShoppingList(user?.id);
+  const { fetchIngredients } = useRecipeIngredients();
 
   const [colecaoActual, setColecaoActual]           = useState('favoritos');
   const [filtrosSelecionados, setFiltrosSelecionados] = useState<FiltroDietetico[]>([]);
@@ -54,6 +60,12 @@ export default function FavoritosScreen() {
   function handleLongPressRecipe(recipe: SavedRecipe) {
     setRecipeParaMover(recipe);
     setPickerVisible(true);
+  }
+
+  async function handleAddToList(recipe: SavedRecipe) {
+    const ingredientes = await fetchIngredients(recipe.recipe_id);
+    const count = await addFromRecipe(recipe.recipe_id, ingredientes, pantryItems);
+    Alert.alert(count > 0 ? `${count} itens adicionados à lista` : 'Já tens tudo o que precisas em casa');
   }
 
   const itemsFiltrados = items.filter(
@@ -138,6 +150,8 @@ export default function FavoritosScreen() {
         visible={!!detalheRecipe}
         recipe={detalheRecipe}
         onClose={() => setDetalheRecipe(null)}
+        onAddToList={() => detalheRecipe && handleAddToList(detalheRecipe)}
+        podeAdicionarLista={detalheRecipe?.fonte === 'spoonacular'}
       />
     </SafeAreaView>
   );
