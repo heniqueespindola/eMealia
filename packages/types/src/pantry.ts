@@ -1,9 +1,12 @@
+export type CategoriaDespensa = 'frescos' | 'secos' | 'congelados' | 'outros';
+
 export interface PantryItem {
   id:         string;
   user_id:    string;
   nome:       string;
   quantidade: string | null;
   barcode:    string | null;
+  categoria:  CategoriaDespensa;
   expira_em:  string | null;
   created_at: string;
 }

@@ -1,33 +1,53 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import type { PantryItem } from '@emealia/types';
+import { getPantry, addPantryItem, updatePantryItem, deletePantryItem } from '@emealia/supabase';
+import { usePantryStore } from '@/stores/pantryStore';
+import type { PantryItem, Database } from '@emealia/types';
 
-export function usePantry(userId: string) {
-  const [items, setItems]   = useState<PantryItem[]>([]);
-  const [loading, setLoading] = useState(true);
+type PantryInsert = Database['public']['Tables']['pantry_items']['Insert'];
+
+export function usePantry(userId: string | undefined) {
+  const items   = usePantryStore((s) => s.items);
+  const loading = usePantryStore((s) => s.loading);
 
   useEffect(() => {
-    async function fetch() {
-      const { data } = await supabase
-        .from('pantry_items')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
-      setItems(data ?? []);
-      setLoading(false);
+    if (!userId) {
+      usePantryStore.getState().reset();
+      return;
     }
-    fetch();
+    if (usePantryStore.getState().loadedUserId === userId) return;
+    fetchItems(userId);
   }, [userId]);
 
-  async function add(item: Omit<PantryItem, 'id' | 'created_at'>) {
-    const { data } = await supabase.from('pantry_items').insert(item).select().single();
-    if (data) setItems((prev) => [data, ...prev]);
+  async function fetchItems(uid: string) {
+    usePantryStore.getState().setLoading(true);
+    const { data, error } = await getPantry(supabase!, uid);
+    if (error) console.error('[usePantry] getPantry falhou:', error);
+    usePantryStore.getState().setItems(uid, data ?? []);
+  }
+
+  async function add(item: Omit<PantryInsert, 'user_id'>) {
+    if (!userId) return;
+    const { data, error } = await addPantryItem(supabase!, { ...item, user_id: userId });
+    if (error) { console.error('[usePantry] addPantryItem falhou:', error); return; }
+    if (data) usePantryStore.getState().addItem(data);
+  }
+
+  async function update(id: string, updates: Partial<PantryItem>) {
+    const { data, error } = await updatePantryItem(supabase!, id, updates);
+    if (error) { console.error('[usePantry] updatePantryItem falhou:', error); return; }
+    if (data) usePantryStore.getState().updateItem(data);
   }
 
   async function remove(id: string) {
-    await supabase.from('pantry_items').delete().eq('id', id);
-    setItems((prev) => prev.filter((i) => i.id !== id));
+    const { error } = await deletePantryItem(supabase!, id);
+    if (error) { console.error('[usePantry] deletePantryItem falhou:', error); return; }
+    usePantryStore.getState().removeItem(id);
   }
 
-  return { items, loading, add, remove };
+  function refetch() {
+    if (userId) fetchItems(userId);
+  }
+
+  return { items, loading, add, update, remove, refetch };
 }
