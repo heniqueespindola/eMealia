@@ -2,15 +2,17 @@ import { Pressable, Text } from 'react-native';
 import { colors, fonts, radius } from '@/constants/theme';
 
 interface PillProps {
-  label:    string;
-  selected: boolean;
-  onPress:  () => void;
+  label:       string;
+  selected:    boolean;
+  onPress:     () => void;
+  onLongPress?: () => void;
 }
 
-export function Pill({ label, selected, onPress }: PillProps) {
+export function Pill({ label, selected, onPress, onLongPress }: PillProps) {
   return (
     <Pressable
       onPress={onPress}
+      onLongPress={onLongPress}
       style={{
         paddingHorizontal: 16,
         paddingVertical:   10,

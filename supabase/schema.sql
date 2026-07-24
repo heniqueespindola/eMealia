@@ -87,6 +87,8 @@ CREATE POLICY "saved_recipes: só o próprio"
 
 CREATE INDEX IF NOT EXISTS saved_recipes_user_id_idx ON saved_recipes(user_id);
 
+ALTER TABLE saved_recipes ADD COLUMN IF NOT EXISTS tempo_minutos int;
+
 -- ─── Meal Plan
 CREATE TABLE IF NOT EXISTS meal_plan (
   id            uuid        DEFAULT gen_random_uuid() PRIMARY KEY,

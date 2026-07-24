@@ -46,3 +46,16 @@ export const FILTROS_DIETETICOS = [
   { value: 'sobremesa',      label: 'Sobremesa' },
   { value: 'pequeno_almoco', label: 'Pequeno-almoço' },
 ] as const;
+
+export const DEFAULT_COLECOES = [
+  { value: 'favoritos',         label: 'Favoritos' },
+  { value: 'para_experimentar', label: 'Para experimentar' },
+  { value: 'semana',            label: 'Semana' },
+] as const;
+
+export const FONTES_FAVORITOS = [
+  { value: 'youtube',     label: 'YouTube' },
+  { value: 'tiktok',      label: 'TikTok' },
+  { value: 'instagram',   label: 'Instagram' },
+  { value: 'spoonacular', label: 'Spoonacular' },
+] as const;

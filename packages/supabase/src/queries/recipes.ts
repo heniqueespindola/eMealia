@@ -26,3 +26,24 @@ export async function saveRecipe(
 export async function unsaveRecipe(client: SupabaseClient<Database>, id: string) {
   return client.from('saved_recipes').delete().eq('id', id);
 }
+
+export async function updateSavedRecipe(
+  client: SupabaseClient<Database>,
+  id: string,
+  updates: Partial<SavedRecipe>
+) {
+  return client.from('saved_recipes').update(updates).eq('id', id).select().single();
+}
+
+export async function reassignColecao(
+  client: SupabaseClient<Database>,
+  userId: string,
+  deColecao: string,
+  paraColecao = 'favoritos'
+) {
+  return client
+    .from('saved_recipes')
+    .update({ colecao: paraColecao })
+    .eq('user_id', userId)
+    .eq('colecao', deColecao);
+}

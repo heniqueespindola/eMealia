@@ -43,6 +43,7 @@ export interface SavedRecipe {
   thumbnail_url: string | null;
   source_url:    string | null;
   macros:        MacroNutrients | null;
+  tempo_minutos: number | null;
   filtros:       FiltroDietetico[];
   colecao:       string;
   created_at:    string;
