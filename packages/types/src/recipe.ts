@@ -21,6 +21,19 @@ export interface Recipe {
   source_url:    string;
 }
 
+export interface RecipeSearchResult {
+  id:                    string;
+  titulo:                string;
+  thumbnail_url:         string;
+  source_url:            string | null;
+  tempo_minutos:         number | null;
+  macros:                MacroNutrients | null;
+  filtros:               FiltroDietetico[];
+  ingredientes_usados:   string[];
+  ingredientes_em_falta: string[];
+  total_ingredientes:    number;
+}
+
 export interface SavedRecipe {
   id:            string;
   user_id:       string;

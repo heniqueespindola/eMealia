@@ -310,8 +310,8 @@ Incluir pedido de permissão no onboarding (Passo 3).
 |---|---|---|---|
 | F01 | Autenticação | MVP | Todos | DONE
 | F02 | Onboarding | MVP | Todos | DONE
-| F03 | Homepage + feed de vídeos | MVP | Todos |
-| F04 | Pesquisa por ingredientes | MVP | Todos |
+| F03 | Homepage + feed de vídeos | MVP | Todos | DONE
+| F04 | Pesquisa por ingredientes | MVP | Todos | DONE
 | F05 | Despensa / inventário | MVP | Todos (limite grátis) |
 | F06 | Favoritos e coleções | MVP | Todos (limite grátis) |
 | F07 | Lista de compras automática | MVP | Grátis (export = Premium) |
