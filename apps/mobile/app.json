@@ -14,7 +14,8 @@
       "bundleIdentifier": "com.mocruz.emealia",
       "infoPlist": {
         "NSCameraUsageDescription": "Usado para escanear códigos de barras de produtos alimentares.",
-        "NSPhotoLibraryUsageDescription": "Usado para escolher foto de perfil."
+        "NSPhotoLibraryUsageDescription": "Usado para escolher foto de perfil.",
+        "NSRemindersUsageDescription": "Usado para exportar a lista de compras para os teus Lembretes."
       }
     },
     "android": {
@@ -34,7 +35,12 @@
       [
         "expo-camera",
         { "cameraPermission": "Usado para escanear códigos de barras de produtos alimentares." }
-      ]
+      ],
+      [
+        "expo-calendar",
+        { "remindersPermission": "Usado para exportar a lista de compras para os teus Lembretes." }
+      ],
+      "@react-native-google-signin/google-signin"
     ],
     "scheme": "emealia",
     "experiments": {

@@ -8,9 +8,10 @@ interface RecipeCardProps {
   recipe:       RecipeSearchResult;
   saved:        boolean;
   onToggleSave: () => void;
+  onAddToList:  () => void;
 }
 
-export function RecipeCard({ recipe, saved, onToggleSave }: RecipeCardProps) {
+export function RecipeCard({ recipe, saved, onToggleSave, onAddToList }: RecipeCardProps) {
   const metadata = [
     recipe.tempo_minutos != null ? `${recipe.tempo_minutos} min` : null,
     recipe.macros ? `${recipe.macros.calorias} kcal` : null,
@@ -59,9 +60,14 @@ export function RecipeCard({ recipe, saved, onToggleSave }: RecipeCardProps) {
         </View>
       </View>
 
-      <Pressable onPress={onToggleSave} style={{ padding: spacing.sm, justifyContent: 'center' }}>
-        <Ionicons name={saved ? 'heart' : 'heart-outline'} size={22} color={colors.primary} />
-      </Pressable>
+      <View style={{ justifyContent: 'center' }}>
+        <Pressable onPress={onToggleSave} style={{ padding: spacing.sm }}>
+          <Ionicons name={saved ? 'heart' : 'heart-outline'} size={22} color={colors.primary} />
+        </Pressable>
+        <Pressable onPress={onAddToList} style={{ padding: spacing.sm }}>
+          <Ionicons name="cart-outline" size={22} color={colors.primary} />
+        </Pressable>
+      </View>
     </View>
   );
 }

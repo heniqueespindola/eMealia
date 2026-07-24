@@ -2,6 +2,7 @@ import type { Profile } from './user';
 import type { CategoriaDespensa, PantryItem, ShoppingListItem } from './pantry';
 import type { SavedRecipe } from './recipe';
 import type { VideoItem } from './feed';
+import type { MealPlanItem } from './planner';
 
 // Achata interfaces em type literais: necessário para satisfazer o constraint
 // `extends Record<string, unknown>` do GenericTable do @supabase/postgrest-js
@@ -39,6 +40,12 @@ export interface Database {
         Row:           Simplify<VideoItem>;
         Insert:        Simplify<Omit<VideoItem, 'id'>>;
         Update:        Simplify<Partial<VideoItem>>;
+        Relationships: [];
+      };
+      meal_plan: {
+        Row:           Simplify<MealPlanItem>;
+        Insert:        Simplify<Omit<MealPlanItem, 'id' | 'created_at'>>;
+        Update:        Simplify<Partial<MealPlanItem>>;
         Relationships: [];
       };
     };
