@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/authStore';
+import { identifyPurchasesUser } from '@/lib/revenuecat';
 
 // Subscrição única (singleton) ao supabase.auth: useAuth() é chamado em
 // vários layouts (root, (auth), onboarding, (tabs)), e cada chamada criava
@@ -18,10 +19,12 @@ function ensureAuthListener() {
   supabase.auth.getSession().then(({ data: { session } }) => {
     useAuthStore.getState().setSession(session);
     useAuthStore.getState().setLoading(false);
+    if (session?.user) identifyPurchasesUser(session.user.id);
   });
 
   supabase.auth.onAuthStateChange((_event, session) => {
     useAuthStore.getState().setSession(session);
+    if (session?.user) identifyPurchasesUser(session.user.id);
   });
 }
 

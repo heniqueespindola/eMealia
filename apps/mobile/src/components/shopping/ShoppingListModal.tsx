@@ -5,7 +5,7 @@ import { useShoppingListExport } from '@/hooks/useShoppingListExport';
 import { ShoppingListItemRow } from './ShoppingListItemRow';
 import { ShoppingListAddForm } from './ShoppingListAddForm';
 import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
+import { PremiumLock } from '@/components/paywall/PremiumLock';
 import { agruparPorComprado } from '@/constants/shopping';
 import { colors, fonts, spacing } from '@/constants/theme';
 import type { Profile, ShoppingListItem } from '@emealia/types';
@@ -90,11 +90,7 @@ export function ShoppingListModal({ visible, onClose, userId, profile }: Shoppin
         />
 
         {upgradeVisible && profile?.plano === 'free' && (
-          <Card style={{ marginTop: spacing.sm }}>
-            <Text style={{ fontFamily: fonts.medium, fontSize: 14, color: colors.textInverted }}>
-              A exportação para Lembretes/Tasks é exclusiva do plano Premium. Faz upgrade para exportares a tua lista.
-            </Text>
-          </Card>
+          <PremiumLock mensagem="A exportação para Lembretes/Tasks é exclusiva do plano Premium. Faz upgrade para exportares a tua lista." />
         )}
 
         <View style={{ gap: spacing.sm, marginTop: spacing.md }}>

@@ -6,6 +6,7 @@ import { PlayfairDisplay_700Bold } from '@expo-google-fonts/playfair-display';
 import * as SplashScreen from 'expo-splash-screen';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
+import { configurePurchases } from '@/lib/revenuecat';
 import '../src/styles/global.css';
 
 SplashScreen.preventAutoHideAsync();
@@ -18,6 +19,10 @@ export default function RootLayout() {
     Inter_700Bold,
     PlayfairDisplay_700Bold,
   });
+
+  useEffect(() => {
+    configurePurchases();
+  }, []);
 
   const { session, loading: authLoading } = useAuth();
   const { loading: profileLoading } = useProfile(session?.user?.id);

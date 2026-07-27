@@ -17,9 +17,36 @@ export const colors = {
 } as const;
 
 export const PLANS = {
-  free:             { price: 0,     label: 'Grátis' },
-  premium_monthly:  { price: 4.99,  label: 'Premium Mensal' },
-  premium_annual:   { price: 34.99, label: 'Premium Anual' },
+  free: {
+    price: 0, label: 'Grátis', melhorValor: false,
+    features: {
+      planeamento_semanal: false,
+      macros: false,
+      export_lembretes: false,
+      despensa_ilimitada: false,
+      favoritos_ilimitados: false,
+    },
+  },
+  premium_monthly: {
+    price: 4.99, label: 'Premium Mensal', melhorValor: false,
+    features: {
+      planeamento_semanal: true,
+      macros: true,
+      export_lembretes: true,
+      despensa_ilimitada: true,
+      favoritos_ilimitados: true,
+    },
+  },
+  premium_annual: {
+    price: 34.99, label: 'Premium Anual', melhorValor: true,
+    features: {
+      planeamento_semanal: true,
+      macros: true,
+      export_lembretes: true,
+      despensa_ilimitada: true,
+      favoritos_ilimitados: true,
+    },
+  },
 } as const;
 
 export const LIMITS = {
