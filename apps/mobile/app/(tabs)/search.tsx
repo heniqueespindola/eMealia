@@ -11,7 +11,7 @@ import { useShoppingList } from '@/hooks/useShoppingList';
 import { useRecipeIngredients } from '@/hooks/useRecipeIngredients';
 import { Input } from '@/components/ui/Input';
 import { Pill } from '@/components/ui/Pill';
-import { Card } from '@/components/ui/Card';
+import { PremiumLock } from '@/components/paywall/PremiumLock';
 import { IngredientChip } from '@/components/pantry/IngredientChip';
 import { IngredientAutocompleteList } from '@/components/pantry/IngredientAutocompleteList';
 import { FilterRow } from '@/components/recipe/FilterRow';
@@ -137,11 +137,7 @@ export default function SearchScreen() {
 
       {limitReached && (
         <View style={{ paddingHorizontal: spacing.lg, paddingBottom: spacing.sm }}>
-          <Card>
-            <Text style={{ fontFamily: fonts.medium, fontSize: 14, color: colors.textInverted }}>
-              Atingiste o limite de {limit} receitas guardadas do plano Grátis. Faz upgrade para Premium para guardares mais.
-            </Text>
-          </Card>
+          <PremiumLock mensagem={`Atingiste o limite de ${limit} receitas guardadas do plano Grátis. Faz upgrade para Premium para guardares mais.`} />
         </View>
       )}
 

@@ -5,11 +5,11 @@ import { router } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { usePantry } from '@/hooks/usePantry';
-import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { PantryItemCard } from '@/components/pantry/PantryItemCard';
 import { PantryItemForm } from '@/components/pantry/PantryItemForm';
 import { ShoppingListModal } from '@/components/shopping/ShoppingListModal';
+import { PremiumLock } from '@/components/paywall/PremiumLock';
 import { agruparPorCategoria } from '@/constants/pantry';
 import { colors, fonts, spacing } from '@/constants/theme';
 import { LIMITS } from '@emealia/config';
@@ -85,11 +85,7 @@ export default function PantryScreen() {
 
       {limitReached && (
         <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.md }}>
-          <Card>
-            <Text style={{ fontFamily: fonts.medium, fontSize: 14, color: colors.textInverted }}>
-              Atingiste o limite de {limit} itens do plano Grátis. Faz upgrade para Premium para adicionares mais.
-            </Text>
-          </Card>
+          <PremiumLock mensagem={`Atingiste o limite de ${limit} itens do plano Grátis. Faz upgrade para Premium para adicionares mais.`} />
         </View>
       )}
 

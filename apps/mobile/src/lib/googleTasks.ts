@@ -1,11 +1,18 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-GoogleSignin.configure({
-  webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-  scopes: ['https://www.googleapis.com/auth/tasks'],
-});
+let configured = false;
+
+function ensureConfigured() {
+  if (configured) return;
+  configured = true;
+  GoogleSignin.configure({
+    webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+    scopes: ['https://www.googleapis.com/auth/tasks'],
+  });
+}
 
 export async function exportToGoogleTasks(items: { nome: string; quantidade: string | null }[]) {
+  ensureConfigured();
   await GoogleSignin.hasPlayServices();
   await GoogleSignin.signIn();
   const { accessToken } = await GoogleSignin.getTokens();
