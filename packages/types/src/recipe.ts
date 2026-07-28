@@ -1,4 +1,5 @@
-import type { FiltroDietetico, VideoSource } from './user';
+import type { FiltroDietetico } from './user';
+import type { VideoSource } from './feed';
 
 export interface MacroNutrients {
   calorias:   number;

@@ -315,8 +315,8 @@ Incluir pedido de permissão no onboarding (Passo 3).
 | F05 | Despensa / inventário | MVP | Todos (limite grátis) | DONE
 | F06 | Favoritos e coleções | MVP | Todos (limite grátis) | DONE
 | F07 | Lista de compras automática | MVP | Grátis (export = Premium) | DONE
-| F08 | Planos e pagamentos | MVP | — |
-| F09 | Planeamento semanal | Fase 2 | Premium |
+| F08 | Planos e pagamentos | MVP | — | DONE
+| F09 | Planeamento semanal | Fase 2 | Premium | DONE
 | F10 | Macros avançados | Fase 2 | Premium |
 | F11 | Criadores em destaque | Fase 2 | Todos |
 | F12 | Modo offline básico | Fase 2 | Todos |

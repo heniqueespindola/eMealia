@@ -8,6 +8,18 @@ const redis = new Redis({
 });
 const CACHE_TTL_SECONDS = 3600; // 1 hora — obrigatório por ToS Spoonacular
 
+function extractMacros(info: any) {
+  const nutrients = info.nutrition?.nutrients;
+  if (!nutrients) return null;
+  const find = (name: string) => nutrients.find((n: any) => n.name === name)?.amount ?? 0;
+  return {
+    calorias:  Math.round(find('Calories')),
+    proteinas: Math.round(find('Protein')),
+    hidratos:  Math.round(find('Carbohydrates')),
+    gorduras:  Math.round(find('Fat')),
+  };
+}
+
 serve(async (req) => {
   const { recipeId } = await req.json();
 
@@ -18,15 +30,15 @@ serve(async (req) => {
     );
   }
 
-  const cacheKey = `spoonacular:ingredients:${recipeId}`;
-  const cached = await redis.get<{ nome: string; quantidade: string | null }[]>(cacheKey);
+  const cacheKey = `spoonacular:ingredients:v2:${recipeId}`;
+  const cached = await redis.get<{ ingredientes: { nome: string; quantidade: string | null }[]; macros: ReturnType<typeof extractMacros> }>(cacheKey);
   if (cached) {
-    return new Response(JSON.stringify({ ingredientes: cached }), {
+    return new Response(JSON.stringify(cached), {
       headers: { 'Content-Type': 'application/json' },
     });
   }
 
-  const params = new URLSearchParams({ includeNutrition: 'false', apiKey: SPOONACULAR_API_KEY });
+  const params = new URLSearchParams({ includeNutrition: 'true', apiKey: SPOONACULAR_API_KEY });
   const res = await fetch(`https://api.spoonacular.com/recipes/${recipeId}/information?${params}`);
 
   if (!res.ok) {
@@ -43,10 +55,11 @@ serve(async (req) => {
     nome:       i.name as string,
     quantidade: i.amount != null && i.unit ? `${i.amount} ${i.unit}`.trim() : null,
   }));
+  const macros = extractMacros(data);
 
-  await redis.set(cacheKey, ingredientes, { ex: CACHE_TTL_SECONDS });
+  await redis.set(cacheKey, { ingredientes, macros }, { ex: CACHE_TTL_SECONDS });
 
-  return new Response(JSON.stringify({ ingredientes }), {
+  return new Response(JSON.stringify({ ingredientes, macros }), {
     headers: { 'Content-Type': 'application/json' },
   });
 });
