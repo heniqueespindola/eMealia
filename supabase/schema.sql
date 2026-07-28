@@ -108,6 +108,16 @@ DROP POLICY IF EXISTS "meal_plan: só o próprio" ON meal_plan;
 CREATE POLICY "meal_plan: só o próprio"
   ON meal_plan FOR ALL USING (auth.uid() = user_id);
 
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'meal_plan_slot_unique'
+  ) THEN
+    ALTER TABLE meal_plan
+      ADD CONSTRAINT meal_plan_slot_unique UNIQUE (user_id, semana_inicio, dia_semana, momento);
+  END IF;
+END $$;
+
 -- ─── Shopping List
 CREATE TABLE IF NOT EXISTS shopping_list (
   id          uuid        DEFAULT gen_random_uuid() PRIMARY KEY,
