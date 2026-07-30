@@ -336,3 +336,75 @@ ALTER TABLE profiles ADD COLUMN IF NOT EXISTS sync_saude_activo boolean NOT NULL
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS sync_saude_ultimo_em timestamptz;
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS sync_saude_plataforma text
   CHECK (sync_saude_plataforma IN ('ios','android'));
+
+-- ─── F15 — Notificações Inteligentes
+
+ALTER TABLE profiles ALTER COLUMN notificacoes_prefs SET DEFAULT
+  '{"sugestoes_jantar": true, "alertas_despensa": true, "lembrete_planeamento": true}'::jsonb;
+
+UPDATE profiles
+SET notificacoes_prefs = notificacoes_prefs || '{"lembrete_planeamento": true}'::jsonb
+WHERE NOT (notificacoes_prefs ? 'lembrete_planeamento');
+
+ALTER TABLE pantry_items ADD COLUMN IF NOT EXISTS alerta_validade_enviado_em timestamptz;
+
+CREATE INDEX IF NOT EXISTS pantry_items_user_expira_idx ON pantry_items(user_id, expira_em);
+
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM cron.job WHERE jobname = 'notify-daily-suggestion') THEN
+    PERFORM cron.unschedule('notify-daily-suggestion');
+  END IF;
+END $$;
+
+SELECT cron.schedule(
+  'notify-daily-suggestion',
+  '0 17 * * *', -- 18h00 Europe/Lisbon (WEST, UTC+1) — ajustar para '0 18 * * *' em horário de inverno (WET)
+  $$
+  SELECT net.http_post(
+    url     := (SELECT decrypted_secret FROM vault.decrypted_secrets WHERE name = 'project_url') || '/functions/v1/notify-daily-suggestion',
+    headers := jsonb_build_object('Content-Type', 'application/json', 'Authorization', 'Bearer ' || (SELECT decrypted_secret FROM vault.decrypted_secrets WHERE name = 'service_role_key')),
+    body    := '{}'::jsonb
+  );
+  $$
+);
+
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM cron.job WHERE jobname = 'notify-pantry-expiry') THEN
+    PERFORM cron.unschedule('notify-pantry-expiry');
+  END IF;
+END $$;
+
+SELECT cron.schedule(
+  'notify-pantry-expiry',
+  '0 8 * * *', -- 09h00 Europe/Lisbon (WEST, UTC+1) — ajustar para '0 9 * * *' em horário de inverno (WET)
+  $$
+  SELECT net.http_post(
+    url     := (SELECT decrypted_secret FROM vault.decrypted_secrets WHERE name = 'project_url') || '/functions/v1/notify-pantry-expiry',
+    headers := jsonb_build_object('Content-Type', 'application/json', 'Authorization', 'Bearer ' || (SELECT decrypted_secret FROM vault.decrypted_secrets WHERE name = 'service_role_key')),
+    body    := '{}'::jsonb
+  );
+  $$
+);
+
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM cron.job WHERE jobname = 'notify-weekly-planner') THEN
+    PERFORM cron.unschedule('notify-weekly-planner');
+  END IF;
+END $$;
+
+SELECT cron.schedule(
+  'notify-weekly-planner',
+  '0 8 * * 1', -- Segunda-feira 09h00 Europe/Lisbon (WEST, UTC+1) — ajustar para '0 9 * * 1' em horário de inverno (WET)
+  $$
+  SELECT net.http_post(
+    url     := (SELECT decrypted_secret FROM vault.decrypted_secrets WHERE name = 'project_url') || '/functions/v1/notify-weekly-planner',
+    headers := jsonb_build_object('Content-Type', 'application/json', 'Authorization', 'Bearer ' || (SELECT decrypted_secret FROM vault.decrypted_secrets WHERE name = 'service_role_key')),
+    body    := '{}'::jsonb
+  );
+  $$
+);

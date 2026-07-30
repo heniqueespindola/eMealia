@@ -1,5 +1,6 @@
 import { View, Text } from 'react-native';
 import { updateProfile } from '@emealia/supabase';
+import { PLANS } from '@emealia/config';
 import { supabase } from '@/lib/supabase';
 import { useProfileStore } from '@/stores/profileStore';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -37,7 +38,7 @@ export function NotificationPrefsSection({ profile }: NotificationPrefsSectionPr
         />
       </View>
 
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: spacing.sm }}>
         <Text style={{ fontFamily: fonts.regular, fontSize: 15, color: colors.textInverted }}>
           {t('profile.notifAlertasDespensa')}
         </Text>
@@ -46,6 +47,18 @@ export function NotificationPrefsSection({ profile }: NotificationPrefsSectionPr
           onValueChange={(v) => toggleNotif('alertas_despensa', v)}
         />
       </View>
+
+      {PLANS[profile.plano].features.planeamento_semanal && (
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Text style={{ fontFamily: fonts.regular, fontSize: 15, color: colors.textInverted }}>
+            {t('profile.notifLembretePlaneamento')}
+          </Text>
+          <Switch
+            value={profile.notificacoes_prefs.lembrete_planeamento}
+            onValueChange={(v) => toggleNotif('lembrete_planeamento', v)}
+          />
+        </View>
+      )}
     </Card>
   );
 }
