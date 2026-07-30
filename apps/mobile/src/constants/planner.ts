@@ -30,3 +30,13 @@ export function formatarIntervaloSemana(semanaInicio: string): string {
   const fmt = (d: Date) => `${d.getDate()}/${d.getMonth() + 1}`;
   return `${fmt(inicio)} – ${fmt(fim)}`;
 }
+
+export function dataDoSlot(semanaInicio: string, diaSemana: number): string {
+  const data = new Date(`${semanaInicio}T00:00:00`);
+  data.setDate(data.getDate() + diaSemana);
+  return data.toISOString().slice(0, 10);
+}
+
+export function diaSemanaAtual(base: Date = new Date()): number {
+  return base.getDay() === 0 ? 6 : base.getDay() - 1;
+}

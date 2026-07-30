@@ -3,6 +3,7 @@ import type { CategoriaDespensa, PantryItem, ShoppingListItem } from './pantry';
 import type { SavedRecipe } from './recipe';
 import type { VideoItem } from './feed';
 import type { MealPlanItem } from './planner';
+import type { MacroDailyTotal } from './macros';
 
 // Achata interfaces em type literais: necessário para satisfazer o constraint
 // `extends Record<string, unknown>` do GenericTable do @supabase/postgrest-js
@@ -46,6 +47,12 @@ export interface Database {
         Row:           Simplify<MealPlanItem>;
         Insert:        Simplify<Omit<MealPlanItem, 'id' | 'created_at'>>;
         Update:        Simplify<Partial<MealPlanItem>>;
+        Relationships: [];
+      };
+      macro_daily_totals: {
+        Row:           Simplify<MacroDailyTotal>;
+        Insert:        Simplify<Omit<MacroDailyTotal, 'id' | 'updated_at'>>;
+        Update:        Simplify<Partial<MacroDailyTotal>>;
         Relationships: [];
       };
     };

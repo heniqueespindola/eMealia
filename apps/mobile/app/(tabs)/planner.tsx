@@ -6,6 +6,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { usePantry } from '@/hooks/usePantry';
 import { usePlanner } from '@/hooks/usePlanner';
 import { usePlannerMacros } from '@/hooks/usePlannerMacros';
+import { useMacroDailyTotalsSync } from '@/hooks/useMacroDailyTotalsSync';
 import { useSavedRecipes } from '@/hooks/useSavedRecipes';
 import { useShoppingList } from '@/hooks/useShoppingList';
 import { usePlannerScreenState } from '@/hooks/usePlannerScreenState';
@@ -24,11 +25,13 @@ export default function PlannerScreen() {
   const [semanaInicio, setSemanaInicio] = useState(segundaFeiraDaSemana());
 
   const podeAceder = profile ? PLANS[profile.plano].features.planeamento_semanal : false;
+  const podeAcederMacros = profile ? PLANS[profile.plano].features.macros : false;
 
   const { items: pantryItems } = usePantry(user?.id);
   const { items: favoritos } = useSavedRecipes(user?.id);
   const { items, loading, assignSlot, moveSlot, removeSlot } = usePlanner(user?.id, semanaInicio, podeAceder);
   const { macrosByDia } = usePlannerMacros(items, favoritos);
+  useMacroDailyTotalsSync(user?.id, semanaInicio, items, favoritos, podeAcederMacros);
   const { addFromSemana } = useShoppingList(user?.id);
 
   const { itemEmMovimento, slotAlvo, handleSlotPress, handleTrocar, handleSelecionarReceita, fecharModal } =
