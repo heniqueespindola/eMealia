@@ -4,6 +4,7 @@ import { useRecipeSearch } from '@/hooks/useRecipeSearch';
 import { Input } from '@/components/ui/Input';
 import { Pill } from '@/components/ui/Pill';
 import { IngredientChip } from '@/components/pantry/IngredientChip';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, spacing } from '@/constants/theme';
 import type { PantryItem, RecipeSource } from '@emealia/types';
 
@@ -13,6 +14,7 @@ interface PlannerSearchTabProps {
 }
 
 export function PlannerSearchTab({ pantryItems, onSelect }: PlannerSearchTabProps) {
+  const { t } = useTranslation();
   const { ingredients, results, loading, addIngredient, removeIngredient, usarDespensa } = useRecipeSearch();
   const [inputText, setInputText] = useState('');
   const [usandoDespensa, setUsandoDespensa] = useState(false);
@@ -35,11 +37,11 @@ export function PlannerSearchTab({ pantryItems, onSelect }: PlannerSearchTabProp
   return (
     <View style={{ flex: 1 }}>
       <Input
-        label="Adicionar ingrediente"
+        label={t('search.adicionarIngrediente')}
         value={inputText}
         onChangeText={setInputText}
         onSubmitEditing={handleSubmitIngredient}
-        placeholder="ex: ovo, tomate..."
+        placeholder={t('search.placeholderIngrediente')}
       />
 
       <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
@@ -48,7 +50,7 @@ export function PlannerSearchTab({ pantryItems, onSelect }: PlannerSearchTabProp
         ))}
       </View>
 
-      <Pill label="Usar despensa" selected={usandoDespensa} onPress={handleToggleDespensa} />
+      <Pill label={t('search.usarDespensa')} selected={usandoDespensa} onPress={handleToggleDespensa} />
 
       {loading ? (
         <ActivityIndicator color={colors.primary} style={{ marginTop: spacing.lg }} />
@@ -60,7 +62,7 @@ export function PlannerSearchTab({ pantryItems, onSelect }: PlannerSearchTabProp
           ListEmptyComponent={
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.lg }}>
               <Text style={{ fontFamily: fonts.regular, color: colors.textMuted, textAlign: 'center' }}>
-                Adiciona pelo menos um ingrediente para veres receitas.
+                {t('search.semIngredientes')}
               </Text>
             </View>
           }

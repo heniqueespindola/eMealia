@@ -13,11 +13,13 @@ import { ColecaoPickerModal } from '@/components/recipe/ColecaoPickerModal';
 import { CreateColecaoModal } from '@/components/recipe/CreateColecaoModal';
 import { RecipeDetailModal } from '@/components/recipe/RecipeDetailModal';
 import { getColecoesDisponiveis, isColecaoPadrao } from '@/constants/favoritos';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, spacing } from '@/constants/theme';
 import { FONTES_FAVORITOS } from '@emealia/config';
 import type { SavedRecipe, FiltroDietetico, RecipeSource } from '@emealia/types';
 
 export default function FavoritosScreen() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { items, customColecoes, moveToColecao, createColecao, deleteColecao } = useSavedRecipes(user?.id);
   const { items: pantryItems } = usePantry(user?.id);
@@ -44,10 +46,10 @@ export default function FavoritosScreen() {
 
   function handleColecaoLongPress(nome: string) {
     if (isColecaoPadrao(nome)) return;
-    Alert.alert('Eliminar coleção', `Eliminar a coleção "${nome}"? As receitas voltam para "Favoritos".`, [
-      { text: 'Cancelar', style: 'cancel' },
+    Alert.alert(t('favoritos.eliminarColecaoTitulo'), t('favoritos.eliminarColecaoMensagem', { nome }), [
+      { text: t('common.cancelar'), style: 'cancel' },
       {
-        text: 'Eliminar',
+        text: t('common.eliminar'),
         style: 'destructive',
         onPress: () => {
           deleteColecao(nome);
@@ -65,7 +67,7 @@ export default function FavoritosScreen() {
   async function handleAddToList(recipe: SavedRecipe) {
     const ingredientes = await fetchIngredients(recipe.recipe_id);
     const count = await addFromRecipe(recipe.recipe_id, ingredientes, pantryItems);
-    Alert.alert(count > 0 ? `${count} itens adicionados à lista` : 'Já tens tudo o que precisas em casa');
+    Alert.alert(count > 0 ? t('favoritos.itensAdicionados', { count }) : t('favoritos.tudoEmCasa'));
   }
 
   const itemsFiltrados = items.filter(
@@ -79,7 +81,7 @@ export default function FavoritosScreen() {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bgDark }}>
       <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.md }}>
         <Text style={{ fontFamily: fonts.display, fontSize: 24, color: colors.primary }}>
-          Favoritos
+          {t('favoritos.titulo')}
         </Text>
       </View>
 
@@ -87,13 +89,13 @@ export default function FavoritosScreen() {
         {colecoes.map((c) => (
           <Pill
             key={c.value}
-            label={c.label}
+            label={c.labelKey ? t(c.labelKey) : (c.label ?? c.value)}
             selected={colecaoActual === c.value}
             onPress={() => setColecaoActual(c.value)}
             onLongPress={() => handleColecaoLongPress(c.value)}
           />
         ))}
-        <Pill label="+ Nova coleção" selected={false} onPress={() => setCreateColecaoVisible(true)} />
+        <Pill label={t('favoritos.novaColecao')} selected={false} onPress={() => setCreateColecaoVisible(true)} />
       </View>
 
       <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.sm }}>
@@ -102,7 +104,7 @@ export default function FavoritosScreen() {
           {FONTES_FAVORITOS.map((f) => (
             <Pill
               key={f.value}
-              label={f.label}
+              label={t(`config.fontesFavoritos.${f.value}`)}
               selected={fontesSelecionadas.includes(f.value)}
               onPress={() => toggleFonte(f.value)}
             />
@@ -124,7 +126,7 @@ export default function FavoritosScreen() {
         ListEmptyComponent={
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: spacing.xxl }}>
             <Text style={{ fontFamily: fonts.regular, color: colors.textMuted, textAlign: 'center' }}>
-              Ainda não guardaste nenhuma receita nesta coleção.
+              {t('favoritos.colecaoVazia')}
             </Text>
           </View>
         }

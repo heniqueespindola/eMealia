@@ -7,12 +7,14 @@ import { useFollowedCreators } from '@/hooks/useFollowedCreators';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useFeed } from '@/hooks/useFeed';
 import { FollowButton } from '@/components/creators/FollowButton';
+import { useTranslation } from '@/hooks/useTranslation';
 import { supabase } from '@/lib/supabase';
 import { getCreatorById } from '@emealia/supabase';
 import { colors, fonts, spacing } from '@/constants/theme';
 import type { Creator } from '@emealia/types';
 
 export default function CreatorProfileScreen() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { user } = useAuth();
   const [creator, setCreator] = useState<Creator | null>(null);
@@ -59,7 +61,7 @@ export default function CreatorProfileScreen() {
       </View>
 
       <Text style={{ fontFamily: fonts.semibold, fontSize: 16, color: colors.textInverted, paddingHorizontal: spacing.lg }}>
-        Vídeos recentes
+        {t('creators.videosRecentes')}
       </Text>
 
       {loading ? (
@@ -77,7 +79,7 @@ export default function CreatorProfileScreen() {
             />
           )}
           ListEmptyComponent={
-            <Text style={{ color: colors.textMuted, fontFamily: fonts.regular }}>Ainda sem vídeos.</Text>
+            <Text style={{ color: colors.textMuted, fontFamily: fonts.regular }}>{t('creators.semVideos')}</Text>
           }
         />
       )}

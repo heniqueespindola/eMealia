@@ -5,10 +5,12 @@ import { useFeaturedCreators } from '@/hooks/useFeaturedCreators';
 import { useFollowedCreators } from '@/hooks/useFollowedCreators';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { CreatorCard } from '@/components/creators/CreatorCard';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, spacing } from '@/constants/theme';
 import type { Creator } from '@emealia/types';
 
 export default function CreatorsScreen() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { creators, loading } = useFeaturedCreators();
   const { isFollowing, follow, unfollow } = useFollowedCreators(user?.id);
@@ -28,7 +30,7 @@ export default function CreatorsScreen() {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bgDark }}>
       <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.md }}>
         <Text style={{ fontFamily: fonts.display, fontSize: 24, color: colors.primary }}>
-          Criadores em Destaque
+          {t('creators.titulo')}
         </Text>
       </View>
 
@@ -45,7 +47,7 @@ export default function CreatorsScreen() {
           ListEmptyComponent={
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: spacing.xxl }}>
               <Text style={{ fontFamily: fonts.regular, color: colors.textMuted, textAlign: 'center' }}>
-                Ainda não há criadores em destaque.
+                {t('creators.semCriadores')}
               </Text>
             </View>
           }

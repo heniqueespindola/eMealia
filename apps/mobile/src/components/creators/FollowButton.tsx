@@ -1,4 +1,5 @@
 import { Pressable, Text } from 'react-native';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, radius } from '@/constants/theme';
 
 interface FollowButtonProps {
@@ -7,6 +8,7 @@ interface FollowButtonProps {
 }
 
 export function FollowButton({ following, onPress }: FollowButtonProps) {
+  const { t } = useTranslation();
   return (
     <Pressable
       onPress={onPress}
@@ -20,7 +22,7 @@ export function FollowButton({ following, onPress }: FollowButtonProps) {
       }}
     >
       <Text style={{ fontFamily: fonts.semibold, fontSize: 13, color: following ? colors.primary : colors.primaryDark }}>
-        {following ? 'A seguir' : 'Seguir'}
+        {following ? t('creators.aSeguir') : t('creators.seguir')}
       </Text>
     </Pressable>
   );

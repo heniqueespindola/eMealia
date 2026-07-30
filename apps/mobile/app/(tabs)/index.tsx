@@ -13,11 +13,13 @@ import { Button } from '@/components/ui/Button';
 import { CarouselStrip } from '@/components/feed/CarouselStrip';
 import { MacroDeviationAlert } from '@/components/macros/MacroDeviationAlert';
 import { FEED_FILTER_OPTIONS } from '@/constants/feedFilters';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, spacing } from '@/constants/theme';
 import { PLANS } from '@emealia/config';
 import type { FiltroDietetico } from '@emealia/types';
 
 export default function HomeScreen() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { profile } = useProfile(user?.id);
   const [filtroSelecionado, setFiltroSelecionado] = useState<FiltroDietetico | null>(null);
@@ -34,7 +36,7 @@ export default function HomeScreen() {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bgDark }}>
       <View style={{ paddingHorizontal: spacing.lg, paddingBottom: spacing.md, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <Text style={{ fontFamily: fonts.display, fontSize: 24, color: colors.primary }}>
-          eMealia
+          {t('feed.appName')}
         </Text>
         <Pressable onPress={() => router.push('/creators')}>
           <Ionicons name="people-circle-outline" size={28} color={colors.primary} />
@@ -48,15 +50,15 @@ export default function HomeScreen() {
       )}
 
       <View style={{ paddingHorizontal: spacing.lg, flexDirection: 'row', flexWrap: 'wrap' }}>
-        <Pill label="Descobrir" selected={vista === 'descobrir'} onPress={() => setVista('descobrir')} />
-        <Pill label="A seguir" selected={vista === 'a_seguir'} onPress={() => setVista('a_seguir')} />
+        <Pill label={t('feed.descobrir')} selected={vista === 'descobrir'} onPress={() => setVista('descobrir')} />
+        <Pill label={t('feed.aSeguir')} selected={vista === 'a_seguir'} onPress={() => setVista('a_seguir')} />
       </View>
 
       <View style={{ paddingHorizontal: spacing.lg, flexDirection: 'row', flexWrap: 'wrap' }}>
         {FEED_FILTER_OPTIONS.map((opcao) => (
           <Pill
-            key={opcao.label}
-            label={opcao.label}
+            key={opcao.labelKey}
+            label={t(opcao.labelKey)}
             selected={filtroSelecionado === opcao.value}
             onPress={() => {
               setFiltroSelecionado(opcao.value);
@@ -69,9 +71,9 @@ export default function HomeScreen() {
       {vista === 'a_seguir' && channelIds.length === 0 ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: spacing.lg, gap: spacing.md }}>
           <Text style={{ fontFamily: fonts.regular, color: colors.textMuted, textAlign: 'center' }}>
-            Ainda não segues nenhum criador.
+            {t('feed.semCriadoresSeguidos')}
           </Text>
-          <Button label="Explorar Criadores em Destaque" onPress={() => router.push('/creators')} />
+          <Button label={t('feed.explorarCriadores')} onPress={() => router.push('/creators')} />
         </View>
       ) : (
         <View style={{ flex: 1, justifyContent: 'center' }}>

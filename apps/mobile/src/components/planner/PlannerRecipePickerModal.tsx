@@ -3,6 +3,7 @@ import { Modal, View, Text, Pressable } from 'react-native';
 import { PlannerFavoritosTab } from './PlannerFavoritosTab';
 import { PlannerSearchTab } from './PlannerSearchTab';
 import { Pill } from '@/components/ui/Pill';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, spacing } from '@/constants/theme';
 import type { SavedRecipe, PantryItem, RecipeSource } from '@emealia/types';
 
@@ -27,6 +28,7 @@ export function PlannerRecipePickerModal({
   onSelect,
   onClose,
 }: PlannerRecipePickerModalProps) {
+  const { t } = useTranslation();
   const [tab, setTab] = useState<'favoritos' | 'pesquisa'>('favoritos');
 
   return (
@@ -34,16 +36,16 @@ export function PlannerRecipePickerModal({
       <View style={{ flex: 1, backgroundColor: colors.bgDark, padding: spacing.lg }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.md }}>
           <Text style={{ fontFamily: fonts.display, fontSize: 20, color: colors.primary }}>
-            Escolher receita
+            {t('planner.escolherReceita')}
           </Text>
           <Pressable onPress={onClose} hitSlop={8}>
-            <Text style={{ fontFamily: fonts.medium, fontSize: 15, color: colors.textMuted }}>Fechar</Text>
+            <Text style={{ fontFamily: fonts.medium, fontSize: 15, color: colors.textMuted }}>{t('common.fechar')}</Text>
           </Pressable>
         </View>
 
         <View style={{ flexDirection: 'row', marginBottom: spacing.md }}>
-          <Pill label="Favoritos" selected={tab === 'favoritos'} onPress={() => setTab('favoritos')} />
-          <Pill label="Pesquisar" selected={tab === 'pesquisa'} onPress={() => setTab('pesquisa')} />
+          <Pill label={t('favoritos.titulo')} selected={tab === 'favoritos'} onPress={() => setTab('favoritos')} />
+          <Pill label={t('search.titulo')} selected={tab === 'pesquisa'} onPress={() => setTab('pesquisa')} />
         </View>
 
         {tab === 'favoritos' ? (

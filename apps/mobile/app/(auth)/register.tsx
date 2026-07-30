@@ -6,9 +6,11 @@ import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/hooks/useAuth';
 import { getAuthErrorMessage } from '@/lib/authErrors';
 import { supabase } from '@/lib/supabase';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, radius } from '@/constants/theme';
 
 export default function RegisterScreen() {
+  const { t } = useTranslation();
   const { signUp } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -20,15 +22,15 @@ export default function RegisterScreen() {
 
   async function handleSubmit() {
     if (!email.trim() || !password || !confirmPassword) {
-      setError('Preenche todos os campos.');
+      setError(t('auth.register.erroCamposVazios'));
       return;
     }
     if (password !== confirmPassword) {
-      setError('As passwords não coincidem.');
+      setError(t('auth.register.erroPasswordsDiferentes'));
       return;
     }
     if (!gdprAccepted) {
-      setError('Tens de aceitar os termos para continuar.');
+      setError(t('auth.register.erroTermos'));
       return;
     }
 
@@ -47,7 +49,7 @@ export default function RegisterScreen() {
       // assim que a sessão fica disponível (ou para o login, se o Supabase
       // exigir confirmação de email antes de criar sessão).
     } catch (err) {
-      setError(getAuthErrorMessage(err));
+      setError(t(getAuthErrorMessage(err)));
     } finally {
       setLoading(false);
     }
@@ -64,22 +66,22 @@ export default function RegisterScreen() {
         </Text>
 
         <Input
-          label="Email"
+          label={t('auth.login.emailLabel')}
           value={email}
           onChangeText={setEmail}
           autoCapitalize="none"
           keyboardType="email-address"
-          placeholder="teu@email.com"
+          placeholder={t('auth.login.emailPlaceholder')}
         />
         <Input
-          label="Password"
+          label={t('auth.login.passwordLabel')}
           value={password}
           onChangeText={setPassword}
           secureTextEntry
           placeholder="••••••••"
         />
         <Input
-          label="Confirmar password"
+          label={t('auth.register.confirmarPassword')}
           value={confirmPassword}
           onChangeText={setConfirmPassword}
           secureTextEntry
@@ -102,7 +104,7 @@ export default function RegisterScreen() {
             }}
           />
           <Text style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.textInverted, flex: 1 }}>
-            Aceito os termos e a política de privacidade.
+            {t('auth.register.aceitoTermos')}
           </Text>
         </Pressable>
 
@@ -112,12 +114,12 @@ export default function RegisterScreen() {
           </Text>
         ) : null}
 
-        <Button label="Criar conta" onPress={handleSubmit} loading={loading} />
+        <Button label={t('auth.register.criarConta')} onPress={handleSubmit} loading={loading} />
 
         <Link href="/(auth)/login" asChild>
           <Pressable style={{ marginTop: 20 }}>
             <Text style={{ fontFamily: fonts.regular, fontSize: 14, color: colors.textMuted, textAlign: 'center' }}>
-              Já tens conta? Entra
+              {t('auth.register.jaTemConta')}
             </Text>
           </Pressable>
         </Link>

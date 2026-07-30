@@ -1,5 +1,6 @@
 import { View, Text } from 'react-native';
 import { DIAS_SEMANA, MOMENTOS } from '@/constants/planner';
+import { useTranslation } from '@/hooks/useTranslation';
 import { DayMacroBar } from './DayMacroBar';
 import { PlannerSlotCard } from './PlannerSlotCard';
 import { PlannerSlotEmpty } from './PlannerSlotEmpty';
@@ -25,11 +26,12 @@ export function PlannerDayRow({
   onRemove,
   onTrocar,
 }: PlannerDayRowProps) {
+  const { t } = useTranslation();
   return (
     <View style={{ marginBottom: spacing.md }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: spacing.xs }}>
         <Text style={{ fontFamily: fonts.semibold, fontSize: 15, color: colors.textInverted }}>
-          {DIAS_SEMANA[diaSemana]}
+          {t(DIAS_SEMANA[diaSemana])}
         </Text>
         {macros && <DayMacroBar totais={macros.totais} parcial={macros.parcial} />}
       </View>

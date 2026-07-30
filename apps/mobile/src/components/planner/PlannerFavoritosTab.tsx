@@ -1,4 +1,5 @@
 import { View, Text, Pressable, FlatList } from 'react-native';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, spacing } from '@/constants/theme';
 import type { SavedRecipe, RecipeSource } from '@emealia/types';
 
@@ -8,6 +9,7 @@ interface PlannerFavoritosTabProps {
 }
 
 export function PlannerFavoritosTab({ favoritos, onSelect }: PlannerFavoritosTabProps) {
+  const { t } = useTranslation();
   return (
     <FlatList
       data={favoritos}
@@ -16,7 +18,7 @@ export function PlannerFavoritosTab({ favoritos, onSelect }: PlannerFavoritosTab
       ListEmptyComponent={
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.lg }}>
           <Text style={{ fontFamily: fonts.regular, color: colors.textMuted, textAlign: 'center' }}>
-            Ainda não tens receitas guardadas nos favoritos.
+            {t('planner.semFavoritos')}
           </Text>
         </View>
       }

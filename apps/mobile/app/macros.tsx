@@ -15,6 +15,7 @@ import { MacroProgressSection } from '@/components/macros/MacroProgressSection';
 import { MacroGoalsForm } from '@/components/macros/MacroGoalsForm';
 import { MacroHistoryView } from '@/components/macros/MacroHistoryView';
 import { MacroDeviationAlert } from '@/components/macros/MacroDeviationAlert';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, spacing } from '@/constants/theme';
 import { segundaFeiraDaSemana, diaSemanaAtual, adicionarSemanas } from '@/constants/planner';
 import { PLANS } from '@emealia/config';
@@ -29,6 +30,7 @@ function adicionarMeses(data: string, delta: number): string {
 }
 
 export default function MacrosScreen() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { profile, loading: profileLoading } = useProfile(user?.id);
   const [vista, setVista] = useState<Vista>('hoje');
@@ -72,28 +74,28 @@ export default function MacrosScreen() {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bgDark }}>
       <ScrollView contentContainerStyle={{ padding: spacing.lg, gap: spacing.md }}>
         <Text style={{ fontFamily: fonts.display, fontSize: 24, color: colors.primary }}>
-          Dashboard de Macros
+          {t('macros.titulo')}
         </Text>
 
         {!podeAceder ? (
-          <PremiumLock mensagem="A contagem avançada de macros é uma funcionalidade Premium. Faz upgrade para desbloquear." />
+          <PremiumLock mensagem={t('macros.premiumBloqueio')} />
         ) : (
           <>
             {alerta && <MacroDeviationAlert diasExcedidos={diasExcedidos} />}
 
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-              <Pill label="Hoje" selected={vista === 'hoje'} onPress={() => setVista('hoje')} />
-              <Pill label="Objectivos" selected={vista === 'objectivos'} onPress={() => setVista('objectivos')} />
-              <Pill label="Histórico" selected={vista === 'historico'} onPress={() => setVista('historico')} />
+              <Pill label={t('macros.hoje')} selected={vista === 'hoje'} onPress={() => setVista('hoje')} />
+              <Pill label={t('macros.objectivos')} selected={vista === 'objectivos'} onPress={() => setVista('objectivos')} />
+              <Pill label={t('macros.historico')} selected={vista === 'historico'} onPress={() => setVista('historico')} />
             </View>
 
             {vista === 'hoje' && (
               !profile?.meta_calorias ? (
                 <View>
                   <Text style={{ fontFamily: fonts.regular, fontSize: 14, color: colors.textMuted, marginBottom: spacing.md }}>
-                    Ainda não definiste os teus objectivos nutricionais.
+                    {t('macros.semObjectivos')}
                   </Text>
-                  <Button label="Define os teus objectivos primeiro" onPress={() => setVista('objectivos')} />
+                  <Button label={t('macros.definirPrimeiro')} onPress={() => setVista('objectivos')} />
                 </View>
               ) : (
                 <MacroProgressSection

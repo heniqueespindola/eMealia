@@ -244,6 +244,12 @@ CREATE INDEX IF NOT EXISTS followed_creators_creator_id_idx ON followed_creators
 ALTER TABLE profiles
   ADD COLUMN IF NOT EXISTS expo_push_token text;
 
+-- ─── F13 — Perfil e Configurações: idioma + preferências de notificação
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS idioma text NOT NULL DEFAULT 'pt-PT'
+  CHECK (idioma IN ('pt-PT','es-ES','en'));
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS notificacoes_prefs jsonb NOT NULL
+  DEFAULT '{"sugestoes_jantar": true, "alertas_despensa": true}'::jsonb;
+
 -- Disparo automático: novo vídeo de um criador seguido -> Edge Function
 -- notify-new-video via pg_net. Requer os secrets 'project_url' e
 -- 'service_role_key' no Vault do Supabase (criados manualmente no
@@ -296,3 +302,30 @@ CREATE TRIGGER pantry_items_set_updated_at BEFORE UPDATE ON pantry_items
 DROP TRIGGER IF EXISTS saved_recipes_set_updated_at ON saved_recipes;
 CREATE TRIGGER saved_recipes_set_updated_at BEFORE UPDATE ON saved_recipes
   FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+-- ─── Storage: avatares de perfil
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('avatars', 'avatars', true)
+ON CONFLICT (id) DO NOTHING;
+
+DROP POLICY IF EXISTS "avatars: leitura pública" ON storage.objects;
+CREATE POLICY "avatars: leitura pública"
+  ON storage.objects FOR SELECT USING (bucket_id = 'avatars');
+
+DROP POLICY IF EXISTS "avatars: upload próprio" ON storage.objects;
+CREATE POLICY "avatars: upload próprio"
+  ON storage.objects FOR INSERT WITH CHECK (
+    bucket_id = 'avatars' AND (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+DROP POLICY IF EXISTS "avatars: update próprio" ON storage.objects;
+CREATE POLICY "avatars: update próprio"
+  ON storage.objects FOR UPDATE USING (
+    bucket_id = 'avatars' AND (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+DROP POLICY IF EXISTS "avatars: delete próprio" ON storage.objects;
+CREATE POLICY "avatars: delete próprio"
+  ON storage.objects FOR DELETE USING (
+    bucket_id = 'avatars' AND (storage.foldername(name))[1] = auth.uid()::text
+  );

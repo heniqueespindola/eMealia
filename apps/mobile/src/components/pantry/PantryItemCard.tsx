@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { isExpiringSoon } from '@/constants/pantry';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, spacing } from '@/constants/theme';
 import type { PantryItem } from '@emealia/types';
 
@@ -14,10 +15,11 @@ interface PantryItemCardProps {
 }
 
 export function PantryItemCard({ item, onEdit, onDelete }: PantryItemCardProps) {
+  const { t } = useTranslation();
   function confirmDelete() {
-    Alert.alert('Eliminar item', `Eliminar "${item.nome}" da despensa?`, [
-      { text: 'Cancelar', style: 'cancel' },
-      { text: 'Eliminar', style: 'destructive', onPress: onDelete },
+    Alert.alert(t('pantryForm.eliminarTitulo'), t('pantryForm.eliminarMensagem', { nome: item.nome }), [
+      { text: t('common.cancelar'), style: 'cancel' },
+      { text: t('common.eliminar'), style: 'destructive', onPress: onDelete },
     ]);
   }
 
@@ -52,7 +54,7 @@ export function PantryItemCard({ item, onEdit, onDelete }: PantryItemCardProps) 
                 </Text>
               ) : null}
             </View>
-            {isExpiringSoon(item.expira_em) && <Badge label="Expira em breve" variant="alerta" />}
+            {isExpiringSoon(item.expira_em) && <Badge label={t('pantryForm.expiraEmBreve')} variant="alerta" />}
           </View>
         </Card>
       </Pressable>

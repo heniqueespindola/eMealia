@@ -15,6 +15,13 @@ export type FiltroDietetico =
 
 export type Momento = 'pequeno_almoco' | 'almoco' | 'jantar' | 'lanche';
 
+export type Idioma = 'pt-PT' | 'es-ES' | 'en';
+
+export interface NotificacoesPrefs {
+  sugestoes_jantar: boolean;
+  alertas_despensa: boolean;
+}
+
 export interface Profile {
   id:                    string;
   nome:                  string | null;
@@ -39,4 +46,6 @@ export interface Profile {
   meta_hidratos:         number | null;
   meta_gorduras:         number | null;
   expo_push_token:       string | null;
+  idioma:                Idioma;
+  notificacoes_prefs:    NotificacoesPrefs;
 }

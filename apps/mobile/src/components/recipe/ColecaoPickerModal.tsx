@@ -1,5 +1,6 @@
 import { Modal, View, Text, ScrollView, Pressable } from 'react-native';
 import { Pill } from '@/components/ui/Pill';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, spacing } from '@/constants/theme';
 import type { ColecaoOption } from '@/constants/favoritos';
 
@@ -11,6 +12,7 @@ interface ColecaoPickerModalProps {
 }
 
 export function ColecaoPickerModal({ visible, colecoes, onSelect, onClose }: ColecaoPickerModalProps) {
+  const { t } = useTranslation();
   function handleSelect(value: string) {
     onSelect(value);
     onClose();
@@ -22,10 +24,10 @@ export function ColecaoPickerModal({ visible, colecoes, onSelect, onClose }: Col
         <View style={{ backgroundColor: colors.bgDark, padding: spacing.lg, borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.md }}>
             <Text style={{ fontFamily: fonts.display, fontSize: 20, color: colors.primary }}>
-              Mover para coleção
+              {t('recipe.moverColecao')}
             </Text>
             <Pressable onPress={onClose} hitSlop={8}>
-              <Text style={{ fontFamily: fonts.medium, fontSize: 15, color: colors.textMuted }}>Cancelar</Text>
+              <Text style={{ fontFamily: fonts.medium, fontSize: 15, color: colors.textMuted }}>{t('common.cancelar')}</Text>
             </Pressable>
           </View>
 
@@ -34,7 +36,7 @@ export function ColecaoPickerModal({ visible, colecoes, onSelect, onClose }: Col
               {colecoes.map((c) => (
                 <Pill
                   key={c.value}
-                  label={c.label}
+                  label={c.labelKey ? t(c.labelKey) : (c.label ?? c.value)}
                   selected={false}
                   onPress={() => handleSelect(c.value)}
                 />

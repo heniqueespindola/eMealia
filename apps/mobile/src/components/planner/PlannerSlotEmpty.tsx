@@ -1,4 +1,5 @@
 import { Pressable, Text } from 'react-native';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, radius, spacing } from '@/constants/theme';
 
 interface PlannerSlotEmptyProps {
@@ -7,6 +8,7 @@ interface PlannerSlotEmptyProps {
 }
 
 export function PlannerSlotEmpty({ destacado, onPress }: PlannerSlotEmptyProps) {
+  const { t } = useTranslation();
   return (
     <Pressable
       onPress={onPress}
@@ -29,7 +31,7 @@ export function PlannerSlotEmpty({ destacado, onPress }: PlannerSlotEmptyProps) 
           textAlign: 'center',
         }}
       >
-        {destacado ? 'Mover para aqui' : '+ Adicionar'}
+        {destacado ? t('planner.moverPara') : t('common.adicionar')}
       </Text>
     </Pressable>
   );

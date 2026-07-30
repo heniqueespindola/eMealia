@@ -11,8 +11,8 @@ export function normalizarNome(nome: string): string {
 
 export function agruparPorComprado(items: ShoppingListItem[]) {
   return [
-    { comprado: false, label: 'Por comprar', data: items.filter((i) => !i.comprado) },
-    { comprado: true,  label: 'Comprados',   data: items.filter((i) => i.comprado) },
+    { comprado: false, labelKey: 'shopping.porComprar', data: items.filter((i) => !i.comprado) },
+    { comprado: true,  labelKey: 'shopping.comprados',   data: items.filter((i) => i.comprado) },
   ].filter((section) => section.data.length > 0);
 }
 

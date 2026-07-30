@@ -1,9 +1,11 @@
 import { Tabs, Redirect } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors } from '@/constants/theme';
 
 export default function TabsLayout() {
+  const { t } = useTranslation();
   const { session } = useAuth();
   const { profile } = useProfile(session?.user?.id);
 
@@ -23,12 +25,12 @@ export default function TabsLayout() {
         tabBarInactiveTintColor: colors.textMuted,
       }}
     >
-      <Tabs.Screen name="index"      options={{ title: 'Início' }} />
-      <Tabs.Screen name="search"     options={{ title: 'Pesquisar' }} />
-      <Tabs.Screen name="favoritos"  options={{ title: 'Favoritos' }} />
-      <Tabs.Screen name="pantry"     options={{ title: 'Despensa' }} />
-      <Tabs.Screen name="planner"    options={{ title: 'Plano' }} />
-      <Tabs.Screen name="profile"    options={{ title: 'Perfil' }} />
+      <Tabs.Screen name="index"      options={{ title: t('tabs.inicio') }} />
+      <Tabs.Screen name="search"     options={{ title: t('tabs.pesquisar') }} />
+      <Tabs.Screen name="favoritos"  options={{ title: t('tabs.favoritos') }} />
+      <Tabs.Screen name="pantry"     options={{ title: t('tabs.despensa') }} />
+      <Tabs.Screen name="planner"    options={{ title: t('tabs.plano') }} />
+      <Tabs.Screen name="profile"    options={{ title: t('tabs.perfil') }} />
     </Tabs>
   );
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Modal, View, Text, SectionList, Pressable, Alert, Share } from 'react-native';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useShoppingList } from '@/hooks/useShoppingList';
 import { useShoppingListExport } from '@/hooks/useShoppingListExport';
 import { ShoppingListItemRow } from './ShoppingListItemRow';
@@ -17,23 +18,24 @@ interface ShoppingListModalProps {
   profile: Profile | null;
 }
 
-function formatarListaTexto(items: ShoppingListItem[]): string {
+function formatarListaTexto(items: ShoppingListItem[], t: (key: string) => string): string {
   const porComprar = items.filter((i) => !i.comprado);
   const comprados   = items.filter((i) => i.comprado);
   const linha = (i: ShoppingListItem) => `- ${i.nome}${i.quantidade ? ` (${i.quantidade})` : ''}`;
   const blocos: string[] = [];
-  if (porComprar.length > 0) blocos.push(['Por comprar:', ...porComprar.map(linha)].join('\n'));
-  if (comprados.length > 0) blocos.push(['Comprados:', ...comprados.map(linha)].join('\n'));
+  if (porComprar.length > 0) blocos.push([t('shopping.porComprar'), ...porComprar.map(linha)].join('\n'));
+  if (comprados.length > 0) blocos.push([t('shopping.comprados'), ...comprados.map(linha)].join('\n'));
   return blocos.join('\n\n');
 }
 
 export function ShoppingListModal({ visible, onClose, userId, profile }: ShoppingListModalProps) {
+  const { t } = useTranslation();
   const { items, addManual, toggleComprado, remove, clear } = useShoppingList(userId);
   const { exportItems, loading: exporting } = useShoppingListExport();
   const [upgradeVisible, setUpgradeVisible] = useState(false);
 
   function handleShare() {
-    Share.share({ message: formatarListaTexto(items) });
+    Share.share({ message: formatarListaTexto(items, t) });
   }
 
   function handleExport() {
@@ -45,9 +47,9 @@ export function ShoppingListModal({ visible, onClose, userId, profile }: Shoppin
   }
 
   function handleClear() {
-    Alert.alert('Limpar lista', 'Eliminar todos os itens?', [
-      { text: 'Cancelar', style: 'cancel' },
-      { text: 'Eliminar', style: 'destructive', onPress: () => clear() },
+    Alert.alert(t('shopping.limparListaTitulo'), t('shopping.limparListaMensagem'), [
+      { text: t('common.cancelar'), style: 'cancel' },
+      { text: t('common.eliminar'), style: 'destructive', onPress: () => clear() },
     ]);
   }
 
@@ -55,9 +57,9 @@ export function ShoppingListModal({ visible, onClose, userId, profile }: Shoppin
     <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
       <View style={{ flex: 1, backgroundColor: colors.bgDark, padding: spacing.lg }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.md }}>
-          <Text style={{ fontFamily: fonts.display, fontSize: 22, color: colors.primary }}>Lista de compras</Text>
+          <Text style={{ fontFamily: fonts.display, fontSize: 22, color: colors.primary }}>{t('shopping.titulo')}</Text>
           <Pressable onPress={onClose} hitSlop={8}>
-            <Text style={{ fontFamily: fonts.medium, fontSize: 15, color: colors.textMuted }}>Fechar</Text>
+            <Text style={{ fontFamily: fonts.medium, fontSize: 15, color: colors.textMuted }}>{t('shopping.fechar')}</Text>
           </Pressable>
         </View>
 
@@ -70,7 +72,7 @@ export function ShoppingListModal({ visible, onClose, userId, profile }: Shoppin
           contentContainerStyle={{ flexGrow: 1 }}
           renderSectionHeader={({ section }) => (
             <Text style={{ fontFamily: fonts.semibold, fontSize: 14, color: colors.textMuted, marginTop: spacing.md, marginBottom: spacing.sm }}>
-              {section.label}
+              {t(section.labelKey)}
             </Text>
           )}
           renderItem={({ item }) => (
@@ -83,25 +85,25 @@ export function ShoppingListModal({ visible, onClose, userId, profile }: Shoppin
           ListEmptyComponent={
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: spacing.xxl }}>
               <Text style={{ fontFamily: fonts.regular, color: colors.textMuted, textAlign: 'center' }}>
-                A tua lista de compras está vazia.
+                {t('shopping.vazia')}
               </Text>
             </View>
           }
         />
 
         {upgradeVisible && profile?.plano === 'free' && (
-          <PremiumLock mensagem="A exportação para Lembretes/Tasks é exclusiva do plano Premium. Faz upgrade para exportares a tua lista." />
+          <PremiumLock mensagem={t('shopping.exportarPremiumBloqueio')} />
         )}
 
         <View style={{ gap: spacing.sm, marginTop: spacing.md }}>
-          <Button label="Partilhar" variant="outline" onPress={handleShare} disabled={items.length === 0} />
+          <Button label={t('shopping.partilhar')} variant="outline" onPress={handleShare} disabled={items.length === 0} />
           <Button
-            label="Exportar para Lembretes/Tasks"
+            label={t('shopping.exportarLembretes')}
             onPress={handleExport}
             loading={exporting}
             disabled={items.filter((i) => !i.comprado).length === 0}
           />
-          <Button label="Limpar lista" variant="outline" onPress={handleClear} disabled={items.length === 0} />
+          <Button label={t('shopping.limparLista')} variant="outline" onPress={handleClear} disabled={items.length === 0} />
         </View>
       </View>
     </Modal>
