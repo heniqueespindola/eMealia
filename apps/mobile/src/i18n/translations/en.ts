@@ -198,4 +198,13 @@ export const en = {
     },
     objectivosNutricionais: { perda: 'Weight loss', manutencao: 'Maintenance', ganho: 'Weight gain' },
   },
+  healthSync: {
+    titulo: 'Health app sync',
+    premiumBloqueio: 'Syncing with Apple Health / Health Connect is a Premium feature.',
+    plataforma: 'Platform: %{plataforma}',
+    plataformas: { ios: 'Apple Health', android: 'Health Connect' },
+    ultimoSync: 'Last synced: %{data}',
+    nuncaSincronizado: 'Not synced yet',
+    autorizacaoNegada: 'Could not get authorization to write health data.',
+  },
 } as const satisfies TranslationDict;

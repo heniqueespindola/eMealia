@@ -9,6 +9,7 @@ import { DietaryFiltersSection } from '@/components/profile/DietaryFiltersSectio
 import { LanguageSection } from '@/components/profile/LanguageSection';
 import { NotificationPrefsSection } from '@/components/profile/NotificationPrefsSection';
 import { PlanSection } from '@/components/profile/PlanSection';
+import { HealthSyncSection } from '@/components/health/HealthSyncSection';
 import { PrivacySection } from '@/components/profile/PrivacySection';
 import { Button } from '@/components/ui/Button';
 import { colors, fonts, spacing } from '@/constants/theme';
@@ -52,6 +53,7 @@ export default function ProfileScreen() {
         <LanguageSection profile={profile} />
         <NotificationPrefsSection profile={profile} />
         <PlanSection userId={user.id} profile={profile} />
+        <HealthSyncSection profile={profile} />
         <PrivacySection userId={user.id} />
 
         <Button label={t('profile.terminarSessao')} variant="outline" onPress={confirmarLogout} />

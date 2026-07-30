@@ -27,6 +27,7 @@ export const PLANS = {
       export_lembretes: false,
       despensa_ilimitada: false,
       favoritos_ilimitados: false,
+      sync_saude: false,
     },
   },
   premium_monthly: {
@@ -37,6 +38,7 @@ export const PLANS = {
       export_lembretes: true,
       despensa_ilimitada: true,
       favoritos_ilimitados: true,
+      sync_saude: true,
     },
   },
   premium_annual: {
@@ -47,6 +49,7 @@ export const PLANS = {
       export_lembretes: true,
       despensa_ilimitada: true,
       favoritos_ilimitados: true,
+      sync_saude: true,
     },
   },
 } as const;
