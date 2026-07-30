@@ -15,4 +15,5 @@ export interface VideoItem {
   ingredientes_chave: string[];
   cached_at:     string;
   fonte?:        VideoSource; // ausente em video_cache (YouTube-only); presente em dados mock
+  creator_channel_id: string | null;
 }

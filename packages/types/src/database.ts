@@ -4,6 +4,7 @@ import type { SavedRecipe } from './recipe';
 import type { VideoItem } from './feed';
 import type { MealPlanItem } from './planner';
 import type { MacroDailyTotal } from './macros';
+import type { Creator, FollowedCreator } from './creator';
 
 // Achata interfaces em type literais: necessário para satisfazer o constraint
 // `extends Record<string, unknown>` do GenericTable do @supabase/postgrest-js
@@ -53,6 +54,18 @@ export interface Database {
         Row:           Simplify<MacroDailyTotal>;
         Insert:        Simplify<Omit<MacroDailyTotal, 'id' | 'updated_at'>>;
         Update:        Simplify<Partial<MacroDailyTotal>>;
+        Relationships: [];
+      };
+      creators: {
+        Row:           Simplify<Creator>;
+        Insert:        Simplify<Omit<Creator, 'id' | 'created_at'>>;
+        Update:        Simplify<Partial<Creator>>;
+        Relationships: [];
+      };
+      followed_creators: {
+        Row:           Simplify<FollowedCreator>;
+        Insert:        Simplify<Omit<FollowedCreator, 'id' | 'followed_at'>>;
+        Update:        Simplify<Partial<FollowedCreator>>;
         Relationships: [];
       };
     };

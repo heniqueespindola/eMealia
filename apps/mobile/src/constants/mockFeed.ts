@@ -14,6 +14,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     filtros: ['rapida', 'vegan'],
     ingredientes_chave: ['quinoa', 'pepino', 'tomate'],
     cached_at: '2026-07-20T09:00:00.000Z',
+    creator_channel_id: null,
   },
   {
     id: 'mock-2',
@@ -28,6 +29,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     filtros: ['rapida'],
     ingredientes_chave: ['massa', 'alho', 'azeite'],
     cached_at: '2026-07-20T09:00:00.000Z',
+    creator_channel_id: null,
   },
   {
     id: 'mock-3',
@@ -42,6 +44,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     filtros: ['vegan'],
     ingredientes_chave: ['grão-de-bico', 'leite de coco', 'curry'],
     cached_at: '2026-07-20T09:00:00.000Z',
+    creator_channel_id: null,
   },
   {
     id: 'mock-4',
@@ -56,6 +59,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     filtros: ['airfryer'],
     ingredientes_chave: ['frango', 'páprica', 'azeite'],
     cached_at: '2026-07-20T09:00:00.000Z',
+    creator_channel_id: null,
   },
   {
     id: 'mock-5',
@@ -70,6 +74,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     filtros: ['airfryer', 'sobremesa'],
     ingredientes_chave: ['farinha', 'açúcar', 'canela'],
     cached_at: '2026-07-20T09:00:00.000Z',
+    creator_channel_id: null,
   },
   {
     id: 'mock-6',
@@ -84,6 +89,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     filtros: ['sobremesa'],
     ingredientes_chave: ['chocolate', 'ovos', 'açúcar'],
     cached_at: '2026-07-20T09:00:00.000Z',
+    creator_channel_id: null,
   },
   {
     id: 'mock-7',
@@ -98,6 +104,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     filtros: ['sobremesa', 'fria'],
     ingredientes_chave: ['limão', 'bolacha', 'leite condensado'],
     cached_at: '2026-07-20T09:00:00.000Z',
+    creator_channel_id: null,
   },
   {
     id: 'mock-8',
@@ -112,6 +119,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     filtros: ['vegan', 'rapida'],
     ingredientes_chave: ['tortilha', 'húmus', 'alface'],
     cached_at: '2026-07-20T09:00:00.000Z',
+    creator_channel_id: null,
   },
   {
     id: 'mock-9',
@@ -126,6 +134,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     filtros: ['sem_gluten'],
     ingredientes_chave: ['arroz arbóreo', 'cogumelos', 'parmesão'],
     cached_at: '2026-07-20T09:00:00.000Z',
+    creator_channel_id: null,
   },
   {
     id: 'mock-10',
@@ -140,6 +149,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     filtros: ['vegetariano'],
     ingredientes_chave: ['massa lasanha', 'espinafres', 'queijo'],
     cached_at: '2026-07-20T09:00:00.000Z',
+    creator_channel_id: null,
   },
   {
     id: 'mock-11',
@@ -154,6 +164,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
     filtros: ['fria'],
     ingredientes_chave: ['arroz', 'atum', 'abacate'],
     cached_at: '2026-07-20T09:00:00.000Z',
+    creator_channel_id: null,
   },
   {
     id: 'mock-12',
@@ -168,5 +179,6 @@ export const MOCK_VIDEOS: VideoItem[] = [
     filtros: ['pequeno_almoco'],
     ingredientes_chave: ['aveia', 'ovos', 'banana'],
     cached_at: '2026-07-20T09:00:00.000Z',
+    creator_channel_id: null,
   },
 ];

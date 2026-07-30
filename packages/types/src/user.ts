@@ -38,4 +38,5 @@ export interface Profile {
   meta_proteinas:        number | null;
   meta_hidratos:         number | null;
   meta_gorduras:         number | null;
+  expo_push_token:       string | null;
 }
