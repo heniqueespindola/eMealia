@@ -4,10 +4,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useFeed } from '@/hooks/useFeed';
+import { useMacroDeviationAlert } from '@/hooks/useMacroDeviationAlert';
 import { Pill } from '@/components/ui/Pill';
 import { CarouselStrip } from '@/components/feed/CarouselStrip';
+import { MacroDeviationAlert } from '@/components/macros/MacroDeviationAlert';
 import { FEED_FILTER_OPTIONS } from '@/constants/feedFilters';
 import { colors, fonts, spacing } from '@/constants/theme';
+import { PLANS } from '@emealia/config';
 import type { FiltroDietetico } from '@emealia/types';
 
 export default function HomeScreen() {
@@ -18,6 +21,9 @@ export default function HomeScreen() {
   const { videos, loading } = useFeed(filtroSelecionado ?? undefined, filtrosPerfil);
   const [activeIndex, setActiveIndex] = useState(0);
 
+  const podeAcederMacros = profile ? PLANS[profile.plano].features.macros : false;
+  const { alerta, diasExcedidos } = useMacroDeviationAlert(user?.id, profile?.meta_calorias ?? null, podeAcederMacros);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bgDark }}>
       <View style={{ paddingHorizontal: spacing.lg, paddingBottom: spacing.md }}>
@@ -25,6 +31,12 @@ export default function HomeScreen() {
           eMealia
         </Text>
       </View>
+
+      {alerta && (
+        <View style={{ paddingHorizontal: spacing.lg }}>
+          <MacroDeviationAlert diasExcedidos={diasExcedidos} />
+        </View>
+      )}
 
       <View style={{ paddingHorizontal: spacing.lg, flexDirection: 'row', flexWrap: 'wrap' }}>
         {FEED_FILTER_OPTIONS.map((opcao) => (

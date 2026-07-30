@@ -152,3 +152,39 @@ CREATE TABLE IF NOT EXISTS video_cache (
 
 CREATE INDEX IF NOT EXISTS video_cache_filtros_idx ON video_cache USING GIN(filtros);
 CREATE INDEX IF NOT EXISTS video_cache_views_idx   ON video_cache(views DESC);
+-- ─── Perfis: objectivos nutricionais (F10)
+ALTER TABLE profiles
+  ADD COLUMN IF NOT EXISTS peso_kg numeric,
+  ADD COLUMN IF NOT EXISTS altura_cm numeric,
+  ADD COLUMN IF NOT EXISTS idade int,
+  ADD COLUMN IF NOT EXISTS sexo text CHECK (sexo IN ('masculino','feminino')),
+  ADD COLUMN IF NOT EXISTS nivel_actividade text
+    CHECK (nivel_actividade IN ('sedentario','ligeiro','moderado','intenso','muito_intenso')),
+  ADD COLUMN IF NOT EXISTS objectivo_nutricional text
+    CHECK (objectivo_nutricional IN ('perda','manutencao','ganho')),
+  ADD COLUMN IF NOT EXISTS meta_calorias int,
+  ADD COLUMN IF NOT EXISTS meta_proteinas int,
+  ADD COLUMN IF NOT EXISTS meta_hidratos int,
+  ADD COLUMN IF NOT EXISTS meta_gorduras int;
+
+-- ─── Macro Daily Totals (F10 — histórico persistido)
+CREATE TABLE IF NOT EXISTS macro_daily_totals (
+  id         uuid        DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id    uuid        REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+  data       date        NOT NULL,
+  calorias   int         NOT NULL DEFAULT 0,
+  proteinas  int         NOT NULL DEFAULT 0,
+  hidratos   int         NOT NULL DEFAULT 0,
+  gorduras   int         NOT NULL DEFAULT 0,
+  parcial    boolean     NOT NULL DEFAULT false,
+  updated_at timestamptz DEFAULT now(),
+  UNIQUE(user_id, data)
+);
+
+ALTER TABLE macro_daily_totals ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "macro_daily_totals: só o próprio" ON macro_daily_totals;
+CREATE POLICY "macro_daily_totals: só o próprio"
+  ON macro_daily_totals FOR ALL USING (auth.uid() = user_id);
+
+CREATE INDEX IF NOT EXISTS macro_daily_totals_user_data_idx ON macro_daily_totals(user_id, data);

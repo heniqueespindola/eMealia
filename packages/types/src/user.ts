@@ -1,3 +1,5 @@
+import type { Sexo, NivelActividade, ObjectivoNutricional } from './macros';
+
 export type Plano = 'free' | 'premium_monthly' | 'premium_annual';
 
 export type FiltroDietetico =
@@ -26,4 +28,14 @@ export interface Profile {
   frequencia_cozinha:    number | null;
   onboarding_completo:   boolean;
   created_at:            string;
+  peso_kg:               number | null;
+  altura_cm:             number | null;
+  idade:                 number | null;
+  sexo:                  Sexo | null;
+  nivel_actividade:      NivelActividade | null;
+  objectivo_nutricional: ObjectivoNutricional | null;
+  meta_calorias:         number | null;
+  meta_proteinas:        number | null;
+  meta_hidratos:         number | null;
+  meta_gorduras:         number | null;
 }

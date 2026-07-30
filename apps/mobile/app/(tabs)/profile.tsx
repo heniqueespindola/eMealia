@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import Purchases from 'react-native-purchases';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
@@ -68,6 +69,18 @@ export default function ProfileScreen() {
             ) : (
               <Button label="Gerir subscrição" variant="outline" onPress={() => Purchases.showManageSubscriptions()} />
             )}
+          </View>
+        </Card>
+
+        <Card>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Text style={{ fontFamily: fonts.semibold, fontSize: 14, color: colors.textInverted }}>
+              Dashboard de Macros
+            </Text>
+            <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+          </View>
+          <View style={{ marginTop: spacing.sm }}>
+            <Button label="Ver objectivos e progresso" variant="outline" onPress={() => router.push('/macros')} />
           </View>
         </Card>
 
