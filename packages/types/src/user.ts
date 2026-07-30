@@ -20,8 +20,9 @@ export type Idioma = 'pt-PT' | 'es-ES' | 'en';
 export type PlataformaSaude = 'ios' | 'android';
 
 export interface NotificacoesPrefs {
-  sugestoes_jantar: boolean;
-  alertas_despensa: boolean;
+  sugestoes_jantar:    boolean;
+  alertas_despensa:    boolean;
+  lembrete_planeamento: boolean;
 }
 
 export interface Profile {

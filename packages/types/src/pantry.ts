@@ -10,6 +10,7 @@ export interface PantryItem {
   expira_em:  string | null;
   created_at: string;
   updated_at: string;
+  alerta_validade_enviado_em?: string | null;
 }
 
 export interface ShoppingListItem {

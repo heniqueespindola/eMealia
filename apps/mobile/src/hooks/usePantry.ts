@@ -62,7 +62,11 @@ export function usePantry(userId: string | undefined) {
       return;
     }
 
-    const { data, error } = await updatePantryItem(supabase!, id, updates);
+    const finalUpdates = 'expira_em' in updates
+      ? { ...updates, alerta_validade_enviado_em: null }
+      : updates;
+
+    const { data, error } = await updatePantryItem(supabase!, id, finalUpdates);
     if (error) { console.error('[usePantry] updatePantryItem falhou:', error); return; }
     if (data) {
       usePantryStore.getState().updateItem(data);

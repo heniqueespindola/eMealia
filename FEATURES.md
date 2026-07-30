@@ -321,8 +321,8 @@ Incluir pedido de permissão no onboarding (Passo 3).
 | F11 | Criadores em destaque | Fase 2 | Todos | DONE
 | F12 | Modo offline básico | Fase 2 | Todos | DONE
 | F13 | Perfil e configurações | Fase 2 | Todos | DONE
-| F14 | Integração Apple Health / Google Fit | Fase 2 | Premium |
-| F15 | Notificações inteligentes | Fase 2 | Todos (algumas Premium) |
+| F14 | Integração Apple Health / Google Fit | Fase 2 | Premium | DONE
+| F15 | Notificações inteligentes | Fase 2 | Todos (algumas Premium) | DONE
 
 ---
 

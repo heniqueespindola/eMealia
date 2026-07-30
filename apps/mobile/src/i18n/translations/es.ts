@@ -93,7 +93,7 @@ export const es = {
     titulo: 'Perfil',
     seccaoPerfil: 'Perfil', editarFoto: 'Editar foto', nomeLabel: 'Nombre', emailLabel: 'Email',
     seccaoPreferencias: 'Preferencias', filtrosDieteticos: 'Filtros dietéticos', idioma: 'Idioma',
-    notificacoes: 'Notificaciones', notifSugestoesJantar: 'Sugerencias de cena', notifAlertasDespensa: 'Alertas de despensa',
+    notificacoes: 'Notificaciones', notifSugestoesJantar: 'Sugerencias de cena', notifAlertasDespensa: 'Alertas de despensa', notifLembretePlaneamento: 'Recordatorio de planificación semanal',
     seccaoPlano: 'Plan', planoActual: 'Plan actual', renovaA: 'Se renueva el %{data}',
     fazerUpgrade: 'Mejorar plan', gerirSubscricao: 'Gestionar suscripción',
     dashboardMacros: 'Panel de Macros', verObjectivos: 'Ver objetivos y progreso', restaurarCompras: 'Restaurar compras',

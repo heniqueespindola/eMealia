@@ -5,6 +5,7 @@ import { Pill } from '@/components/ui/Pill';
 import { StepIndicator } from '@/components/ui/StepIndicator';
 import { BackButton } from '@/components/ui/BackButton';
 import { useAuth } from '@/hooks/useAuth';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { supabase } from '@/lib/supabase';
 import { updateProfile, addPantryItems } from '@emealia/supabase';
 import { useOnboardingStore } from '@/stores/onboardingStore';
@@ -17,6 +18,7 @@ import type { FiltroDietetico } from '@emealia/types';
 export default function OnboardingStep3() {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { registerForPush } = usePushNotifications();
   const filtrosFavoritos  = useOnboardingStore((s) => s.filtrosFavoritos);
   const frequenciaCozinha = useOnboardingStore((s) => s.frequenciaCozinha);
 
@@ -55,6 +57,13 @@ export default function OnboardingStep3() {
         console.error('[onboarding] updateProfile falhou:', updateError);
         setError(t('onboarding.erroGuardarPerfil'));
         return;
+      }
+
+      try {
+        await registerForPush(user.id);
+      } catch (err) {
+        console.error('[onboarding] registerForPush falhou:', err);
+        // Não bloqueia o onboarding — utilizador pode activar notificações mais tarde nas definições do sistema.
       }
 
       if (ingredientesIniciais.length > 0) {
