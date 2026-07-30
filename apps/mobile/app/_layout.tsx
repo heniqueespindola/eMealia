@@ -7,6 +7,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { configurePurchases } from '@/lib/revenuecat';
+import { OfflineBanner } from '@/components/ui/OfflineBanner';
+import { useSyncManager } from '@/hooks/useSyncManager';
 import '../src/styles/global.css';
 
 SplashScreen.preventAutoHideAsync();
@@ -26,6 +28,7 @@ export default function RootLayout() {
 
   const { session, loading: authLoading } = useAuth();
   const { loading: profileLoading } = useProfile(session?.user?.id);
+  useSyncManager(session?.user?.id);
 
   const authReady = fontsLoaded && !authLoading && (!session || !profileLoading);
 
@@ -37,6 +40,7 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      <OfflineBanner />
       <Stack screenOptions={{ headerShown: false }} />
     </GestureHandlerRootView>
   );

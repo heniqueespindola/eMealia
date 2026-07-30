@@ -22,13 +22,13 @@ export interface Database {
       };
       pantry_items: {
         Row:           Simplify<PantryItem>;
-        Insert:        Simplify<Omit<PantryItem, 'id' | 'created_at' | 'categoria'> & { categoria?: CategoriaDespensa }>;
+        Insert:        Simplify<Omit<PantryItem, 'id' | 'created_at' | 'updated_at' | 'categoria'> & { id?: string; created_at?: string; updated_at?: string; categoria?: CategoriaDespensa }>;
         Update:        Simplify<Partial<PantryItem>>;
         Relationships: [];
       };
       saved_recipes: {
         Row:           Simplify<SavedRecipe>;
-        Insert:        Simplify<Omit<SavedRecipe, 'id' | 'created_at'>>;
+        Insert:        Simplify<Omit<SavedRecipe, 'id' | 'created_at' | 'updated_at'>>;
         Update:        Simplify<Partial<SavedRecipe>>;
         Relationships: [];
       };

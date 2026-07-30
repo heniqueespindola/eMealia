@@ -9,6 +9,7 @@ export interface PantryItem {
   categoria:  CategoriaDespensa;
   expira_em:  string | null;
   created_at: string;
+  updated_at: string;
 }
 
 export interface ShoppingListItem {

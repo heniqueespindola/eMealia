@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { MOCK_VIDEOS } from '@/constants/mockFeed';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import type { VideoItem, FiltroDietetico } from '@emealia/types';
 
 function countMatches(videoFiltros: FiltroDietetico[], perfilFiltros: FiltroDietetico[]): number {
@@ -11,10 +12,18 @@ export function useFeed(filtro?: FiltroDietetico, filtrosPerfil: FiltroDietetico
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { isOffline } = useNetworkStatus();
 
   useEffect(() => {
     async function fetchFeed() {
       setLoading(true);
+
+      if (isOffline) {
+        setVideos([]);
+        setError('Sem ligação à internet — o feed de vídeos precisa de rede.');
+        setLoading(false);
+        return;
+      }
 
       if (creatorChannelIds && creatorChannelIds.length === 0) {
         setVideos([]);

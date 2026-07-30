@@ -1,6 +1,9 @@
 -- eMealia — Schema Supabase (Frankfurt — EU)
 -- Executar em: Supabase Dashboard > SQL Editor
 -- Versão idempotente: pode ser corrida múltiplas vezes sem erros
+-- IMPORTANTE: não há sistema de migrations neste projecto — qualquer
+-- alteração a este ficheiro tem de ser colada manualmente no SQL Editor
+-- do Supabase Dashboard para ter efeito na base de dados real.
 
 -- ─── Profiles (extende auth.users)
 CREATE TABLE IF NOT EXISTS profiles (
@@ -63,6 +66,8 @@ ALTER TABLE pantry_items
   ADD COLUMN IF NOT EXISTS categoria text NOT NULL DEFAULT 'outros'
   CHECK (categoria IN ('frescos','secos','congelados','outros'));
 
+ALTER TABLE pantry_items ADD COLUMN IF NOT EXISTS updated_at timestamptz DEFAULT now();
+
 -- ─── Saved Recipes
 CREATE TABLE IF NOT EXISTS saved_recipes (
   id            uuid        DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -88,6 +93,7 @@ CREATE POLICY "saved_recipes: só o próprio"
 CREATE INDEX IF NOT EXISTS saved_recipes_user_id_idx ON saved_recipes(user_id);
 
 ALTER TABLE saved_recipes ADD COLUMN IF NOT EXISTS tempo_minutos int;
+ALTER TABLE saved_recipes ADD COLUMN IF NOT EXISTS updated_at timestamptz DEFAULT now();
 
 -- ─── Meal Plan
 CREATE TABLE IF NOT EXISTS meal_plan (
@@ -273,3 +279,20 @@ DROP TRIGGER IF EXISTS on_video_cache_insert ON video_cache;
 CREATE TRIGGER on_video_cache_insert
   AFTER INSERT ON video_cache
   FOR EACH ROW EXECUTE FUNCTION notify_creator_followers();
+
+-- ─── Modo Offline Básico — updated_at para last-write-wins
+
+CREATE OR REPLACE FUNCTION set_updated_at() RETURNS trigger AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS pantry_items_set_updated_at ON pantry_items;
+CREATE TRIGGER pantry_items_set_updated_at BEFORE UPDATE ON pantry_items
+  FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+DROP TRIGGER IF EXISTS saved_recipes_set_updated_at ON saved_recipes;
+CREATE TRIGGER saved_recipes_set_updated_at BEFORE UPDATE ON saved_recipes
+  FOR EACH ROW EXECUTE FUNCTION set_updated_at();

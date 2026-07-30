@@ -53,4 +53,5 @@ export interface SavedRecipe {
   filtros:       FiltroDietetico[];
   colecao:       string;
   created_at:    string;
+  updated_at:    string;
 }

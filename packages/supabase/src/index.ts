@@ -6,3 +6,6 @@ export * from './queries/shopping_list';
 export * from './queries/meal_plan';
 export * from './queries/macro_daily_totals';
 export * from './queries/creators';
+export * from './offline/types';
+export * from './offline/sync';
+export * from './offline/lastWriteWins';

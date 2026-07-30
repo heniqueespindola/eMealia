@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import type { FiltroDietetico, PantryItem, RecipeSearchResult } from '@emealia/types';
 
 export function useRecipeSearch() {
@@ -8,10 +9,18 @@ export function useRecipeSearch() {
   const [results, setResults]         = useState<RecipeSearchResult[]>([]);
   const [loading, setLoading]         = useState(false);
   const [error, setError]             = useState<string | null>(null);
+  const { isOffline }                 = useNetworkStatus();
 
   useEffect(() => {
     if (ingredients.length === 0) {
       setResults([]);
+      setLoading(false);
+      return;
+    }
+
+    if (isOffline) {
+      setResults([]);
+      setError('Sem ligação à internet — a pesquisa de receitas precisa de rede.');
       setLoading(false);
       return;
     }
