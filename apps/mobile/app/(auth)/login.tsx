@@ -5,9 +5,11 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/hooks/useAuth';
 import { getAuthErrorMessage } from '@/lib/authErrors';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts } from '@/constants/theme';
 
 export default function LoginScreen() {
+  const { t } = useTranslation();
   const { signIn } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -17,7 +19,7 @@ export default function LoginScreen() {
 
   async function handleSubmit() {
     if (!email.trim() || !password) {
-      setError('Preenche o email e a password.');
+      setError(t('auth.login.erroCamposVazios'));
       return;
     }
 
@@ -29,7 +31,7 @@ export default function LoginScreen() {
       // mudança de `session` e faz o redirect (para onboarding ou tabs,
       // consoante o perfil) assim que a sessão fica disponível.
     } catch (err) {
-      setError(getAuthErrorMessage(err));
+      setError(t(getAuthErrorMessage(err)));
     } finally {
       setLoading(false);
     }
@@ -46,15 +48,15 @@ export default function LoginScreen() {
         </Text>
 
         <Input
-          label="Email"
+          label={t('auth.login.emailLabel')}
           value={email}
           onChangeText={setEmail}
           autoCapitalize="none"
           keyboardType="email-address"
-          placeholder="teu@email.com"
+          placeholder={t('auth.login.emailPlaceholder')}
         />
         <Input
-          label="Password"
+          label={t('auth.login.passwordLabel')}
           value={password}
           onChangeText={setPassword}
           secureTextEntry
@@ -67,12 +69,12 @@ export default function LoginScreen() {
           </Text>
         ) : null}
 
-        <Button label="Entrar" onPress={handleSubmit} loading={loading} />
+        <Button label={t('auth.login.entrar')} onPress={handleSubmit} loading={loading} />
 
         <Link href="/(auth)/register" asChild>
           <Pressable style={{ marginTop: 20 }}>
             <Text style={{ fontFamily: fonts.regular, fontSize: 14, color: colors.textMuted, textAlign: 'center' }}>
-              Não tens conta? Regista-te
+              {t('auth.login.semConta')}
             </Text>
           </Pressable>
         </Link>

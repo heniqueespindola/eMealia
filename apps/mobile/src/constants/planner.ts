@@ -1,12 +1,16 @@
-import type { Momento } from '@emealia/types';
+import type { Idioma, Momento } from '@emealia/types';
+import { formatarData } from '@/i18n/formatDate';
 
-export const DIAS_SEMANA = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+export const DIAS_SEMANA = [
+  'planner.dias.0', 'planner.dias.1', 'planner.dias.2', 'planner.dias.3',
+  'planner.dias.4', 'planner.dias.5', 'planner.dias.6',
+];
 
-export const MOMENTOS: { value: Momento; label: string }[] = [
-  { value: 'pequeno_almoco', label: 'Pequeno-almoço' },
-  { value: 'almoco',         label: 'Almoço' },
-  { value: 'jantar',         label: 'Jantar' },
-  { value: 'lanche',         label: 'Lanche' },
+export const MOMENTOS: { value: Momento; labelKey: string }[] = [
+  { value: 'pequeno_almoco', labelKey: 'planner.momentos.pequeno_almoco' },
+  { value: 'almoco',         labelKey: 'planner.momentos.almoco' },
+  { value: 'jantar',         labelKey: 'planner.momentos.jantar' },
+  { value: 'lanche',         labelKey: 'planner.momentos.lanche' },
 ];
 
 export function segundaFeiraDaSemana(base: Date = new Date()): string {
@@ -23,12 +27,12 @@ export function adicionarSemanas(semanaInicio: string, deltaSemanas: number): st
   return data.toISOString().slice(0, 10);
 }
 
-export function formatarIntervaloSemana(semanaInicio: string): string {
+export function formatarIntervaloSemana(semanaInicio: string, idioma: Idioma | null | undefined): string {
   const inicio = new Date(`${semanaInicio}T00:00:00`);
   const fim = new Date(inicio);
   fim.setDate(inicio.getDate() + 6);
-  const fmt = (d: Date) => `${d.getDate()}/${d.getMonth() + 1}`;
-  return `${fmt(inicio)} – ${fmt(fim)}`;
+  const opts: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'numeric' };
+  return `${formatarData(inicio, idioma, opts)} – ${formatarData(fim, idioma, opts)}`;
 }
 
 export function dataDoSlot(semanaInicio: string, diaSemana: number): string {

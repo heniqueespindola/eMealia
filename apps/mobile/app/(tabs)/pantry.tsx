@@ -11,11 +11,13 @@ import { PantryItemForm } from '@/components/pantry/PantryItemForm';
 import { ShoppingListModal } from '@/components/shopping/ShoppingListModal';
 import { PremiumLock } from '@/components/paywall/PremiumLock';
 import { agruparPorCategoria } from '@/constants/pantry';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, spacing } from '@/constants/theme';
 import { LIMITS } from '@emealia/config';
 import type { PantryItem } from '@emealia/types';
 
 export default function PantryScreen() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { profile } = useProfile(user?.id);
   const { items, loading, add, update, remove, refetch } = usePantry(user?.id);
@@ -74,18 +76,18 @@ export default function PantryScreen() {
         }}
       >
         <Text style={{ fontFamily: fonts.display, fontSize: 24, color: colors.primary }}>
-          Despensa
+          {t('pantry.titulo')}
         </Text>
         <Pressable onPress={() => setListaVisible(true)} hitSlop={8}>
           <Text style={{ fontFamily: fonts.medium, fontSize: 14, color: colors.textInverted }}>
-            🛒 Lista de compras
+            {t('pantry.listaCompras')}
           </Text>
         </Pressable>
       </View>
 
       {limitReached && (
         <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.md }}>
-          <PremiumLock mensagem={`Atingiste o limite de ${limit} itens do plano Grátis. Faz upgrade para Premium para adicionares mais.`} />
+          <PremiumLock mensagem={t('pantry.limiteAtingido', { limite: limit })} />
         </View>
       )}
 
@@ -96,7 +98,7 @@ export default function PantryScreen() {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor={colors.primary} />}
         renderSectionHeader={({ section }) => (
           <Text style={{ fontFamily: fonts.semibold, fontSize: 14, color: colors.textMuted, marginTop: spacing.md, marginBottom: spacing.sm }}>
-            {section.label}
+            {t(section.labelKey)}
           </Text>
         )}
         renderItem={({ item }) => (
@@ -105,16 +107,16 @@ export default function PantryScreen() {
         ListEmptyComponent={
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: spacing.xxl }}>
             <Text style={{ fontFamily: fonts.regular, color: colors.textMuted, textAlign: 'center' }}>
-              A tua despensa está vazia. Adiciona o primeiro ingrediente para começares.
+              {t('pantry.vazia')}
             </Text>
           </View>
         }
       />
 
       <View style={{ padding: spacing.lg, gap: spacing.sm }}>
-        <Button label="+ Adicionar" onPress={openCreate} disabled={limitReached} />
+        <Button label={t('common.adicionar')} onPress={openCreate} disabled={limitReached} />
         <Button
-          label="Cozinhar agora"
+          label={t('pantry.cozinharAgora')}
           variant="outline"
           disabled={items.length === 0}
           onPress={() => router.push({ pathname: '/(tabs)/search', params: { usarDespensa: '1' } })}
@@ -127,6 +129,7 @@ export default function PantryScreen() {
         onSubmit={handleFormSubmit}
         initialValues={editingItem ?? undefined}
         limitReached={limitReached}
+        limite={limit}
       />
 
       <ShoppingListModal

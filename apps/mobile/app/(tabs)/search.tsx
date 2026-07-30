@@ -16,6 +16,7 @@ import { IngredientChip } from '@/components/pantry/IngredientChip';
 import { IngredientAutocompleteList } from '@/components/pantry/IngredientAutocompleteList';
 import { FilterRow } from '@/components/recipe/FilterRow';
 import { RecipeCard } from '@/components/recipe/RecipeCard';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, spacing } from '@/constants/theme';
 import { LIMITS } from '@emealia/config';
 import { saveRecipe, unsaveRecipe, getSavedRecipes } from '@emealia/supabase';
@@ -23,6 +24,7 @@ import { supabase } from '@/lib/supabase';
 import type { RecipeSearchResult } from '@emealia/types';
 
 export default function SearchScreen() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { profile } = useProfile(user?.id);
   const limit = profile?.plano === 'free' ? LIMITS.free.saved_recipes : LIMITS.premium.saved_recipes;
@@ -105,22 +107,22 @@ export default function SearchScreen() {
   async function handleAddToList(recipe: RecipeSearchResult) {
     const ingredientes = await fetchIngredients(recipe.id);
     const count = await addFromRecipe(recipe.id, ingredientes, pantryItems);
-    Alert.alert(count > 0 ? `${count} itens adicionados à lista` : 'Já tens tudo o que precisas em casa');
+    Alert.alert(count > 0 ? t('favoritos.itensAdicionados', { count }) : t('favoritos.tudoEmCasa'));
   }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bgDark }}>
       <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.md }}>
         <Text style={{ fontFamily: fonts.display, fontSize: 24, color: colors.primary }}>
-          Pesquisar por ingredientes
+          {t('search.titulo')}
         </Text>
 
         <Input
-          label="Adicionar ingrediente"
+          label={t('search.adicionarIngrediente')}
           value={inputText}
           onChangeText={setInputText}
           onSubmitEditing={handleSubmitIngredient}
-          placeholder="ex: ovo, tomate..."
+          placeholder={t('search.placeholderIngrediente')}
         />
 
         {suggestions.length > 0 && (
@@ -131,20 +133,20 @@ export default function SearchScreen() {
             <IngredientChip key={ing} nome={ing} onRemove={() => removeIngredient(ing)} />
           ))}
         </View>
-        <Pill label="Usar despensa" selected={usandoDespensa} onPress={handleToggleDespensa} />
+        <Pill label={t('search.usarDespensa')} selected={usandoDespensa} onPress={handleToggleDespensa} />
         <FilterRow filtrosSelecionados={filtros} onToggle={toggleFiltro} />
       </View>
 
       {limitReached && (
         <View style={{ paddingHorizontal: spacing.lg, paddingBottom: spacing.sm }}>
-          <PremiumLock mensagem={`Atingiste o limite de ${limit} receitas guardadas do plano Grátis. Faz upgrade para Premium para guardares mais.`} />
+          <PremiumLock mensagem={t('search.limiteGuardadasAtingido', { limite: limit })} />
         </View>
       )}
 
       {ingredients.length === 0 ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.lg }}>
           <Text style={{ fontFamily: fonts.regular, color: colors.textMuted, textAlign: 'center' }}>
-            Adiciona pelo menos um ingrediente para veres receitas.
+            {t('search.semIngredientes')}
           </Text>
         </View>
       ) : error ? (
@@ -158,7 +160,7 @@ export default function SearchScreen() {
       ) : results.length === 0 ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.lg }}>
           <Text style={{ fontFamily: fonts.regular, color: colors.textMuted, textAlign: 'center' }}>
-            Nenhuma receita encontrada com estes ingredientes/filtros.
+            {t('search.semResultados')}
           </Text>
         </View>
       ) : (

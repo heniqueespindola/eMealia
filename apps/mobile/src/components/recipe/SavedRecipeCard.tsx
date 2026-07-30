@@ -1,6 +1,6 @@
 import { View, Text, Image, Pressable } from 'react-native';
 import { colors, fonts, radius, spacing } from '@/constants/theme';
-import { FILTROS_DIETETICOS } from '@emealia/config';
+import { useTranslation } from '@/hooks/useTranslation';
 import { SourceBadge } from '@/components/feed/SourceBadge';
 import type { SavedRecipe } from '@emealia/types';
 
@@ -11,6 +11,7 @@ interface SavedRecipeCardProps {
 }
 
 export function SavedRecipeCard({ recipe, onPress, onLongPress }: SavedRecipeCardProps) {
+  const { t } = useTranslation();
   const metadata = [
     recipe.tempo_minutos != null ? `${recipe.tempo_minutos} min` : null,
     recipe.macros ? `${recipe.macros.calorias} kcal` : null,
@@ -63,7 +64,7 @@ export function SavedRecipeCard({ recipe, onPress, onLongPress }: SavedRecipeCar
                 }}
               >
                 <Text style={{ fontFamily: fonts.medium, fontSize: 11, color: colors.primaryDark }}>
-                  {FILTROS_DIETETICOS.find((opt) => opt.value === f)?.label}
+                  {t(`config.filtros.${f}`)}
                 </Text>
               </View>
             ))}

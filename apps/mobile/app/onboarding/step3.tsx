@@ -10,10 +10,12 @@ import { updateProfile, addPantryItems } from '@emealia/supabase';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { useProfileStore } from '@/stores/profileStore';
 import { OPCOES_FILTROS_FAVORITOS, OPCOES_FREQUENCIA_COZINHA } from '@/constants/onboarding';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts } from '@/constants/theme';
 import type { FiltroDietetico } from '@emealia/types';
 
 export default function OnboardingStep3() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const filtrosFavoritos  = useOnboardingStore((s) => s.filtrosFavoritos);
   const frequenciaCozinha = useOnboardingStore((s) => s.frequenciaCozinha);
@@ -33,7 +35,7 @@ export default function OnboardingStep3() {
     if (frequencia === null) return;
 
     if (!user) {
-      setError('Sessão expirada. Volta a fazer login e tenta novamente.');
+      setError(t('onboarding.erroSessao'));
       return;
     }
 
@@ -51,7 +53,7 @@ export default function OnboardingStep3() {
 
       if (updateError || !updatedProfile) {
         console.error('[onboarding] updateProfile falhou:', updateError);
-        setError('Não foi possível guardar o teu perfil. Tenta novamente.');
+        setError(t('onboarding.erroGuardarPerfil'));
         return;
       }
 
@@ -73,7 +75,7 @@ export default function OnboardingStep3() {
       // '/(tabs)' automaticamente assim que o estado atualiza.
     } catch (err) {
       console.error('[onboarding] handleConcluir exceção:', err);
-      setError('Não foi possível concluir o onboarding. Tenta novamente.');
+      setError(t('onboarding.erroConcluir'));
     } finally {
       setLoading(false);
     }
@@ -89,17 +91,17 @@ export default function OnboardingStep3() {
       <StepIndicator current={3} total={3} />
 
       <Text style={{ fontFamily: fonts.display, fontSize: 28, color: colors.textPrimary, textAlign: 'center', marginBottom: 12 }}>
-        Últimos detalhes
+        {t('onboarding.step3Titulo')}
       </Text>
       <Text style={{ fontFamily: fonts.regular, fontSize: 15, color: colors.textPrimary, textAlign: 'center', marginBottom: 24 }}>
-        Escolhe os teus filtros favoritos e diz-nos com que frequência costumas cozinhar.
+        {t('onboarding.step3Subtitulo')}
       </Text>
 
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginBottom: 24 }}>
         {OPCOES_FILTROS_FAVORITOS.map((opcao) => (
           <Pill
             key={opcao.value}
-            label={opcao.label}
+            label={t(`config.filtros.${opcao.value}`)}
             selected={filtrosFavoritosSelecionados.includes(opcao.value)}
             onPress={() => toggleFiltro(opcao.value)}
           />
@@ -107,13 +109,13 @@ export default function OnboardingStep3() {
       </View>
 
       <Text style={{ fontFamily: fonts.medium, fontSize: 14, color: colors.textPrimary, textAlign: 'center', marginBottom: 12 }}>
-        Com que frequência costumas cozinhar?
+        {t('onboarding.frequenciaCozinha')}
       </Text>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginBottom: 32 }}>
         {OPCOES_FREQUENCIA_COZINHA.map((opcao) => (
           <Pill
             key={opcao.value}
-            label={opcao.label}
+            label={t(opcao.labelKey)}
             selected={frequencia === opcao.value}
             onPress={() => setFrequencia(opcao.value)}
           />
@@ -126,7 +128,7 @@ export default function OnboardingStep3() {
         </Text>
       ) : null}
 
-      <Button label="Concluir" onPress={handleConcluir} loading={loading} disabled={frequencia === null} />
+      <Button label={t('common.concluir')} onPress={handleConcluir} loading={loading} disabled={frequencia === null} />
     </ScrollView>
   );
 }

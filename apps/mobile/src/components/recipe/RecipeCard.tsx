@@ -1,7 +1,7 @@
 import { View, Text, Image, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, fonts, radius, spacing } from '@/constants/theme';
-import { FILTROS_DIETETICOS } from '@emealia/config';
+import { useTranslation } from '@/hooks/useTranslation';
 import type { RecipeSearchResult } from '@emealia/types';
 
 interface RecipeCardProps {
@@ -12,10 +12,11 @@ interface RecipeCardProps {
 }
 
 export function RecipeCard({ recipe, saved, onToggleSave, onAddToList }: RecipeCardProps) {
+  const { t } = useTranslation();
   const metadata = [
     recipe.tempo_minutos != null ? `${recipe.tempo_minutos} min` : null,
     recipe.macros ? `${recipe.macros.calorias} kcal` : null,
-    `${recipe.ingredientes_usados.length}/${recipe.total_ingredientes} disponíveis`,
+    t('recipe.disponiveis', { disponiveis: recipe.ingredientes_usados.length, total: recipe.total_ingredientes }),
   ]
     .filter(Boolean)
     .join(' · ');
@@ -53,7 +54,7 @@ export function RecipeCard({ recipe, saved, onToggleSave, onAddToList }: RecipeC
               }}
             >
               <Text style={{ fontFamily: fonts.medium, fontSize: 11, color: colors.primaryDark }}>
-                {FILTROS_DIETETICOS.find((opt) => opt.value === f)?.label}
+                {t(`config.filtros.${f}`)}
               </Text>
             </View>
           ))}

@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/Input';
 import { Pill } from '@/components/ui/Pill';
 import { Button } from '@/components/ui/Button';
 import { useMacroGoals } from '@/hooks/useMacroGoals';
+import { useTranslation } from '@/hooks/useTranslation';
 import { NIVEIS_ACTIVIDADE, OBJECTIVOS_NUTRICIONAIS } from '@emealia/config';
 import { colors, fonts, spacing } from '@/constants/theme';
 import type { Profile, Sexo, NivelActividade, ObjectivoNutricional } from '@emealia/types';
@@ -13,12 +14,13 @@ interface MacroGoalsFormProps {
   profile: Profile | null;
 }
 
-const SEXOS: { value: Sexo; label: string }[] = [
-  { value: 'masculino', label: 'Masculino' },
-  { value: 'feminino',  label: 'Feminino' },
+const SEXOS: { value: Sexo; labelKey: string }[] = [
+  { value: 'masculino', labelKey: 'macroGoalsForm.masculino' },
+  { value: 'feminino',  labelKey: 'macroGoalsForm.feminino' },
 ];
 
 export function MacroGoalsForm({ userId, profile }: MacroGoalsFormProps) {
+  const { t } = useTranslation();
   const { guardarObjectivos, saving } = useMacroGoals(userId);
 
   const [pesoKg, setPesoKg]     = useState(profile?.peso_kg ? String(profile.peso_kg) : '');
@@ -55,13 +57,13 @@ export function MacroGoalsForm({ userId, profile }: MacroGoalsFormProps) {
       <Input label="Idade" value={idade} onChangeText={setIdade} keyboardType="numeric" />
 
       <Text style={{ fontFamily: fonts.medium, fontSize: 14, color: colors.textInverted, marginBottom: 6 }}>
-        Sexo biológico
+        {t('macroGoalsForm.sexoBiologico')}
       </Text>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginBottom: spacing.md }}>
         {SEXOS.map((opcao) => (
           <Pill
             key={opcao.value}
-            label={opcao.label}
+            label={t(opcao.labelKey)}
             selected={sexo === opcao.value}
             onPress={() => setSexo(opcao.value)}
           />
@@ -69,13 +71,13 @@ export function MacroGoalsForm({ userId, profile }: MacroGoalsFormProps) {
       </View>
 
       <Text style={{ fontFamily: fonts.medium, fontSize: 14, color: colors.textInverted, marginBottom: 6 }}>
-        Nível de actividade
+        {t('macroGoalsForm.nivelActividade')}
       </Text>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginBottom: spacing.md }}>
         {NIVEIS_ACTIVIDADE.map((opcao) => (
           <Pill
             key={opcao.value}
-            label={opcao.label}
+            label={t(`config.niveisActividade.${opcao.value}`)}
             selected={nivelActividade === opcao.value}
             onPress={() => setNivelActividade(opcao.value)}
           />
@@ -83,20 +85,20 @@ export function MacroGoalsForm({ userId, profile }: MacroGoalsFormProps) {
       </View>
 
       <Text style={{ fontFamily: fonts.medium, fontSize: 14, color: colors.textInverted, marginBottom: 6 }}>
-        Objectivo
+        {t('macroGoalsForm.objectivo')}
       </Text>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginBottom: spacing.lg }}>
         {OBJECTIVOS_NUTRICIONAIS.map((opcao) => (
           <Pill
             key={opcao.value}
-            label={opcao.label}
+            label={t(`config.objectivosNutricionais.${opcao.value}`)}
             selected={objectivo === opcao.value}
             onPress={() => setObjectivo(opcao.value)}
           />
         ))}
       </View>
 
-      <Button label="Guardar" onPress={handleGuardar} loading={saving} disabled={!valido} />
+      <Button label={t('common.guardar')} onPress={handleGuardar} loading={saving} disabled={!valido} />
     </View>
   );
 }

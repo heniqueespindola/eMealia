@@ -1,5 +1,6 @@
 import { View, Text } from 'react-native';
 import { Badge } from '@/components/ui/Badge';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, radius, spacing } from '@/constants/theme';
 
 interface MacroProgressBarProps {
@@ -10,6 +11,7 @@ interface MacroProgressBarProps {
 }
 
 export function MacroProgressBar({ label, atual, meta, unidade }: MacroProgressBarProps) {
+  const { t } = useTranslation();
   const pct = meta > 0 ? Math.min((atual / meta) * 100, 100) : 0;
   const excedido = meta > 0 && atual > meta;
 
@@ -21,7 +23,7 @@ export function MacroProgressBar({ label, atual, meta, unidade }: MacroProgressB
           <Text style={{ fontFamily: fonts.regular, fontSize: 12, color: colors.textMuted }}>
             {Math.round(atual)}/{meta} {unidade}
           </Text>
-          {excedido && <Badge label="excedido" variant="alerta" />}
+          {excedido && <Badge label={t('macros.excedido')} variant="alerta" />}
         </View>
       </View>
       <View style={{ height: 8, borderRadius: radius.full, backgroundColor: colors.bgDarkAlt, overflow: 'hidden' }}>

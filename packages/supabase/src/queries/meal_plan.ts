@@ -12,6 +12,15 @@ export async function getMealPlanSemana(client: SupabaseClient<Database>, userId
     .order('dia_semana', { ascending: true });
 }
 
+export async function getMealPlanTodas(client: SupabaseClient<Database>, userId: string) {
+  return client
+    .from('meal_plan')
+    .select('*')
+    .eq('user_id', userId)
+    .order('semana_inicio', { ascending: true })
+    .order('dia_semana', { ascending: true });
+}
+
 export async function upsertMealPlanSlot(client: SupabaseClient<Database>, item: MealPlanInsert) {
   return client
     .from('meal_plan')

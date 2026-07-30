@@ -33,6 +33,7 @@
       "expo-font",
       "expo-secure-store",
       "expo-notifications",
+      "expo-image-picker",
       [
         "expo-camera",
         { "cameraPermission": "Usado para escanear códigos de barras de produtos alimentares." }

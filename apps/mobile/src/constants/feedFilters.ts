@@ -1,14 +1,14 @@
 import type { FiltroDietetico } from '@emealia/types';
 
 export interface FeedFilterOption {
-  label: string;
+  labelKey: string;
   value: FiltroDietetico | null; // null = "Todos"
 }
 
 export const FEED_FILTER_OPTIONS: FeedFilterOption[] = [
-  { label: 'Todos',      value: null },
-  { label: 'Rápidas',    value: 'rapida' },
-  { label: 'Vegan',      value: 'vegan' },
-  { label: 'Airfryer',   value: 'airfryer' },
-  { label: 'Sobremesas', value: 'sobremesa' },
+  { labelKey: 'feed.filtros.todos',      value: null },
+  { labelKey: 'feed.filtros.rapidas',    value: 'rapida' },
+  { labelKey: 'feed.filtros.vegan',      value: 'vegan' },
+  { labelKey: 'feed.filtros.airfryer',   value: 'airfryer' },
+  { labelKey: 'feed.filtros.sobremesas', value: 'sobremesa' },
 ];

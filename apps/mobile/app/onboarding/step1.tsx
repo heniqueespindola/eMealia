@@ -6,10 +6,12 @@ import { Pill } from '@/components/ui/Pill';
 import { StepIndicator } from '@/components/ui/StepIndicator';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { OPCOES_PREFERENCIAS_DIETETICAS } from '@/constants/onboarding';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts } from '@/constants/theme';
 import type { FiltroDietetico } from '@emealia/types';
 
 export default function OnboardingStep1() {
+  const { t } = useTranslation();
   const router = useRouter();
   const filtrosDieteticos = useOnboardingStore((s) => s.filtrosDieteticos);
   const [selecionados, setSelecionados] = useState<FiltroDietetico[]>(filtrosDieteticos);
@@ -33,24 +35,24 @@ export default function OnboardingStep1() {
       <StepIndicator current={1} total={3} />
 
       <Text style={{ fontFamily: fonts.display, fontSize: 28, color: colors.textPrimary, textAlign: 'center', marginBottom: 12 }}>
-        Bem-vindo(a) à eMealia
+        {t('onboarding.step1Titulo')}
       </Text>
       <Text style={{ fontFamily: fonts.regular, fontSize: 15, color: colors.textPrimary, textAlign: 'center', marginBottom: 32 }}>
-        Cozinha o que tens, descobre o que queres. Conta-nos as tuas preferências para te mostrarmos receitas à tua medida.
+        {t('onboarding.step1Subtitulo')}
       </Text>
 
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginBottom: 32 }}>
         {OPCOES_PREFERENCIAS_DIETETICAS.map((opcao) => (
           <Pill
             key={opcao.value}
-            label={opcao.label}
+            label={t(`config.filtros.${opcao.value}`)}
             selected={selecionados.includes(opcao.value)}
             onPress={() => toggle(opcao.value)}
           />
         ))}
       </View>
 
-      <Button label="Próximo" onPress={handleNext} />
+      <Button label={t('common.proximo')} onPress={handleNext} />
     </ScrollView>
   );
 }

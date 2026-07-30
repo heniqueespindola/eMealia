@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, spacing } from '@/constants/theme';
 
 interface PremiumLockProps {
@@ -10,6 +11,7 @@ interface PremiumLockProps {
 }
 
 export function PremiumLock({ mensagem }: PremiumLockProps) {
+  const { t } = useTranslation();
   return (
     <Card>
       <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm, marginBottom: spacing.sm }}>
@@ -19,7 +21,7 @@ export function PremiumLock({ mensagem }: PremiumLockProps) {
         </Text>
       </View>
       <Button
-        label="Fazer upgrade"
+        label={t('paywall.fazerUpgrade')}
         onPress={() => router.push({ pathname: '/(tabs)/profile', params: { abrirUpgrade: '1' } })}
       />
     </Card>

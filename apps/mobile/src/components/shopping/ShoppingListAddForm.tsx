@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { IngredientAutocompleteList } from '@/components/pantry/IngredientAutocompleteList';
 import { useIngredientAutocomplete } from '@/hooks/useIngredientAutocomplete';
+import { useTranslation } from '@/hooks/useTranslation';
 import { spacing } from '@/constants/theme';
 
 interface ShoppingListAddFormProps {
@@ -11,6 +12,7 @@ interface ShoppingListAddFormProps {
 }
 
 export function ShoppingListAddForm({ onAdd }: ShoppingListAddFormProps) {
+  const { t } = useTranslation();
   const [texto, setTexto] = useState('');
   const suggestions = useIngredientAutocomplete(texto);
 
@@ -22,9 +24,9 @@ export function ShoppingListAddForm({ onAdd }: ShoppingListAddFormProps) {
 
   return (
     <View style={{ gap: spacing.sm }}>
-      <Input placeholder="Adicionar item…" value={texto} onChangeText={setTexto} onSubmitEditing={() => submit(texto)} label="Adicionar item" />
+      <Input placeholder={t('shopping.adicionarItemPlaceholder')} value={texto} onChangeText={setTexto} onSubmitEditing={() => submit(texto)} label={t('shopping.adicionarItem')} />
       {suggestions.length > 0 && <IngredientAutocompleteList suggestions={suggestions} onSelect={submit} />}
-      <Button label="+ Adicionar" onPress={() => submit(texto)} disabled={!texto.trim()} />
+      <Button label={t('common.adicionar')} onPress={() => submit(texto)} disabled={!texto.trim()} />
     </View>
   );
 }

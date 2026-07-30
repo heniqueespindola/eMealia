@@ -15,11 +15,13 @@ import { WeekNavigator } from '@/components/planner/WeekNavigator';
 import { PlannerGrid } from '@/components/planner/PlannerGrid';
 import { PlannerRecipePickerModal } from '@/components/planner/PlannerRecipePickerModal';
 import { Button } from '@/components/ui/Button';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, spacing } from '@/constants/theme';
 import { segundaFeiraDaSemana, adicionarSemanas } from '@/constants/planner';
 import { PLANS } from '@emealia/config';
 
 export default function PlannerScreen() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { profile, loading: profileLoading } = useProfile(user?.id);
   const [semanaInicio, setSemanaInicio] = useState(segundaFeiraDaSemana());
@@ -39,15 +41,15 @@ export default function PlannerScreen() {
 
   async function handleGerarListaSemana() {
     if (items.length === 0) {
-      Alert.alert('Ainda não tens receitas planeadas para esta semana');
+      Alert.alert(t('planner.semReceitas'));
       return;
     }
     const count = await addFromSemana(items, pantryItems);
     const videosIgnorados = items.filter((i) => i.fonte && i.fonte !== 'spoonacular').length;
 
-    let mensagem = count > 0 ? `${count} itens adicionados à lista` : 'Já tens tudo o que precisas em casa';
+    let mensagem = count > 0 ? t('favoritos.itensAdicionados', { count }) : t('favoritos.tudoEmCasa');
     if (videosIgnorados > 0) {
-      mensagem += `\n\n${videosIgnorados} receita(s) de vídeo não têm ingredientes estruturados e não entraram na lista.`;
+      mensagem += `\n\n${t('planner.videosIgnorados', { count: videosIgnorados })}`;
     }
     Alert.alert(mensagem);
   }
@@ -64,11 +66,11 @@ export default function PlannerScreen() {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bgDark }}>
       <View style={{ flex: 1, padding: spacing.lg }}>
         <Text style={{ fontFamily: fonts.display, fontSize: 24, color: colors.primary, marginBottom: spacing.lg }}>
-          Planeamento semanal
+          {t('planner.titulo')}
         </Text>
 
         {!podeAceder ? (
-          <PremiumLock mensagem="O planeamento semanal de refeições é uma funcionalidade Premium. Faz upgrade para desbloquear." />
+          <PremiumLock mensagem={t('planner.premiumBloqueio')} />
         ) : (
           <>
             <WeekNavigator
@@ -79,7 +81,7 @@ export default function PlannerScreen() {
 
             {itemEmMovimento && (
               <Text style={{ fontFamily: fonts.medium, fontSize: 13, color: colors.primary, marginBottom: spacing.sm }}>
-                A mover &quot;{itemEmMovimento.titulo}&quot; — toca no slot de destino
+                {t('planner.aMover', { titulo: itemEmMovimento.titulo })}
               </Text>
             )}
 
@@ -99,7 +101,7 @@ export default function PlannerScreen() {
             )}
 
             <View style={{ marginTop: spacing.md }}>
-              <Button label="Gerar lista da semana" onPress={handleGerarListaSemana} />
+              <Button label={t('planner.gerarLista')} onPress={handleGerarListaSemana} />
             </View>
 
             <PlannerRecipePickerModal

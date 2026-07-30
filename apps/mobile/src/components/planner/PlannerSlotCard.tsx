@@ -2,6 +2,7 @@ import { View, Text, Pressable, Alert } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { Card } from '@/components/ui/Card';
+import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, radius, spacing } from '@/constants/theme';
 import type { MealPlanItem } from '@emealia/types';
 
@@ -14,10 +15,11 @@ interface PlannerSlotCardProps {
 }
 
 export function PlannerSlotCard({ item, selecionado, onPress, onRemove, onTrocar }: PlannerSlotCardProps) {
+  const { t } = useTranslation();
   function confirmRemove() {
-    Alert.alert('Remover receita', `Remover "${item.titulo}" deste slot?`, [
-      { text: 'Cancelar', style: 'cancel' },
-      { text: 'Remover', style: 'destructive', onPress: onRemove },
+    Alert.alert(t('planner.removerTitulo'), t('planner.removerMensagem', { titulo: item.titulo }), [
+      { text: t('common.cancelar'), style: 'cancel' },
+      { text: t('planner.remover'), style: 'destructive', onPress: onRemove },
     ]);
   }
 

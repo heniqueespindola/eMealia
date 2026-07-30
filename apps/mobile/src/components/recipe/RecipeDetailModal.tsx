@@ -4,7 +4,7 @@ import * as Linking from 'expo-linking';
 import { Button } from '@/components/ui/Button';
 import { SourceBadge } from '@/components/feed/SourceBadge';
 import { colors, fonts, spacing } from '@/constants/theme';
-import { FILTROS_DIETETICOS } from '@emealia/config';
+import { useTranslation } from '@/hooks/useTranslation';
 import { cacheViewedRecipe } from '@/lib/offline/recipeCache';
 import type { SavedRecipe } from '@emealia/types';
 
@@ -25,6 +25,7 @@ export function RecipeDetailModal({
   podeAdicionarLista,
   addingToList,
 }: RecipeDetailModalProps) {
+  const { t } = useTranslation();
   useEffect(() => {
     if (recipe) cacheViewedRecipe(recipe);
   }, [recipe?.id]);
@@ -40,7 +41,7 @@ export function RecipeDetailModal({
       <ScrollView style={{ flex: 1, backgroundColor: colors.bgDark }} contentContainerStyle={{ padding: spacing.lg }}>
         <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginBottom: spacing.sm }}>
           <Pressable onPress={onClose} hitSlop={8}>
-            <Text style={{ fontFamily: fonts.medium, fontSize: 15, color: colors.textMuted }}>Fechar</Text>
+            <Text style={{ fontFamily: fonts.medium, fontSize: 15, color: colors.textMuted }}>{t('recipe.fechar')}</Text>
           </Pressable>
         </View>
 
@@ -69,12 +70,12 @@ export function RecipeDetailModal({
         {recipe.macros && (
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginBottom: spacing.md }}>
             {[
-              { label: 'Calorias',   valor: `${recipe.macros.calorias} kcal` },
-              { label: 'Proteínas',  valor: `${recipe.macros.proteinas} g` },
-              { label: 'Hidratos',   valor: `${recipe.macros.hidratos} g` },
-              { label: 'Gorduras',   valor: `${recipe.macros.gorduras} g` },
+              { key: 'calorias',  label: t('recipe.calorias'),  valor: `${recipe.macros.calorias} kcal` },
+              { key: 'proteinas', label: t('recipe.proteinas'), valor: `${recipe.macros.proteinas} g` },
+              { key: 'hidratos',  label: t('recipe.hidratos'),  valor: `${recipe.macros.hidratos} g` },
+              { key: 'gorduras',  label: t('recipe.gorduras'),  valor: `${recipe.macros.gorduras} g` },
             ].map((m) => (
-              <View key={m.label} style={{ width: '50%', marginBottom: spacing.sm }}>
+              <View key={m.key} style={{ width: '50%', marginBottom: spacing.sm }}>
                 <Text style={{ fontFamily: fonts.bold, fontSize: 18, color: colors.textInverted }}>{m.valor}</Text>
                 <Text style={{ fontFamily: fonts.regular, fontSize: 12, color: colors.textMuted }}>{m.label}</Text>
               </View>
@@ -96,23 +97,23 @@ export function RecipeDetailModal({
               }}
             >
               <Text style={{ fontFamily: fonts.medium, fontSize: 12, color: colors.primaryDark }}>
-                {FILTROS_DIETETICOS.find((opt) => opt.value === f)?.label}
+                {t(`config.filtros.${f}`)}
               </Text>
             </View>
           ))}
         </View>
 
-        <Button label="Abrir receita original" onPress={handleOpenSource} disabled={!recipe.source_url} />
+        <Button label={t('recipe.abrirOriginal')} onPress={handleOpenSource} disabled={!recipe.source_url} />
 
         <View style={{ marginTop: spacing.sm }}>
           <Button
-            label="Adicionar à lista de compras"
+            label={t('recipe.adicionarListaCompras')}
             onPress={onAddToList}
             disabled={!podeAdicionarLista || addingToList}
           />
           {!podeAdicionarLista && (
             <Text style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.textMuted, marginTop: spacing.sm }}>
-              Esta receita não tem lista de ingredientes estruturada — adiciona os itens manualmente na lista de compras.
+              {t('recipe.semIngredientesEstruturados')}
             </Text>
           )}
         </View>
