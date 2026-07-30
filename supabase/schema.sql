@@ -188,3 +188,88 @@ CREATE POLICY "macro_daily_totals: só o próprio"
   ON macro_daily_totals FOR ALL USING (auth.uid() = user_id);
 
 CREATE INDEX IF NOT EXISTS macro_daily_totals_user_data_idx ON macro_daily_totals(user_id, data);
+
+-- ─── F11 — Criadores em Destaque
+
+-- Ligação de vídeos a um criador (a preencher pelo processo externo que
+-- popula video_cache — fora deste repo)
+ALTER TABLE video_cache
+  ADD COLUMN IF NOT EXISTS creator_channel_id text;
+
+CREATE INDEX IF NOT EXISTS video_cache_creator_channel_id_idx
+  ON video_cache(creator_channel_id);
+
+-- Criadores parceiros (partilhado — mesmo padrão de video_cache: sem RLS
+-- de utilizador, dados públicos geridos por curadoria/admin)
+CREATE TABLE IF NOT EXISTS creators (
+  id             uuid        DEFAULT gen_random_uuid() PRIMARY KEY,
+  channel_id     text        UNIQUE NOT NULL,
+  nome           text,
+  canal          text,
+  avatar_url     text,
+  especialidade  text,
+  numero_videos  int,
+  destaque       boolean     NOT NULL DEFAULT true,
+  cached_at      timestamptz,
+  created_at     timestamptz DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS creators_destaque_idx ON creators(destaque);
+
+-- Subscrições de criadores por utilizador
+CREATE TABLE IF NOT EXISTS followed_creators (
+  id           uuid        DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id      uuid        REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+  creator_id   uuid        REFERENCES creators(id) ON DELETE CASCADE NOT NULL,
+  followed_at  timestamptz DEFAULT now(),
+  UNIQUE(user_id, creator_id)
+);
+
+ALTER TABLE followed_creators ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "followed_creators: só o próprio" ON followed_creators;
+CREATE POLICY "followed_creators: só o próprio"
+  ON followed_creators FOR ALL USING (auth.uid() = user_id);
+
+CREATE INDEX IF NOT EXISTS followed_creators_user_id_idx ON followed_creators(user_id);
+CREATE INDEX IF NOT EXISTS followed_creators_creator_id_idx ON followed_creators(creator_id);
+
+-- Token de push notification (Expo)
+ALTER TABLE profiles
+  ADD COLUMN IF NOT EXISTS expo_push_token text;
+
+-- Disparo automático: novo vídeo de um criador seguido -> Edge Function
+-- notify-new-video via pg_net. Requer os secrets 'project_url' e
+-- 'service_role_key' no Vault do Supabase (criados manualmente no
+-- Dashboard/SQL Editor — NUNCA commitar nada disto):
+--   select vault.create_secret('https://xxxx.supabase.co', 'project_url');
+--   select vault.create_secret('<service-role-key>', 'service_role_key');
+CREATE EXTENSION IF NOT EXISTS pg_net;
+
+CREATE OR REPLACE FUNCTION notify_creator_followers()
+RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER AS $$
+DECLARE
+  v_project_url text;
+  v_service_key text;
+BEGIN
+  IF NEW.creator_channel_id IS NULL THEN
+    RETURN NEW;
+  END IF;
+
+  SELECT decrypted_secret INTO v_project_url FROM vault.decrypted_secrets WHERE name = 'project_url';
+  SELECT decrypted_secret INTO v_service_key FROM vault.decrypted_secrets WHERE name = 'service_role_key';
+
+  PERFORM net.http_post(
+    url     := v_project_url || '/functions/v1/notify-new-video',
+    headers := jsonb_build_object('Content-Type', 'application/json', 'Authorization', 'Bearer ' || v_service_key),
+    body    := jsonb_build_object('video_id', NEW.id, 'creator_channel_id', NEW.creator_channel_id)
+  );
+
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS on_video_cache_insert ON video_cache;
+CREATE TRIGGER on_video_cache_insert
+  AFTER INSERT ON video_cache
+  FOR EACH ROW EXECUTE FUNCTION notify_creator_followers();

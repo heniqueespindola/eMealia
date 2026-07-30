@@ -318,7 +318,7 @@ Incluir pedido de permissão no onboarding (Passo 3).
 | F08 | Planos e pagamentos | MVP | — | DONE
 | F09 | Planeamento semanal | Fase 2 | Premium | DONE
 | F10 | Macros avançados | Fase 2 | Premium | DONE
-| F11 | Criadores em destaque | Fase 2 | Todos |
+| F11 | Criadores em destaque | Fase 2 | Todos | DONE
 | F12 | Modo offline básico | Fase 2 | Todos |
 | F13 | Perfil e configurações | Fase 2 | Todos |
 | F14 | Integração Apple Health / Google Fit | Fase 2 | Premium |

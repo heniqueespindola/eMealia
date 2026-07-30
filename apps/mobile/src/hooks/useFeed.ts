@@ -7,7 +7,7 @@ function countMatches(videoFiltros: FiltroDietetico[], perfilFiltros: FiltroDiet
   return videoFiltros.filter((f) => perfilFiltros.includes(f)).length;
 }
 
-export function useFeed(filtro?: FiltroDietetico, filtrosPerfil: FiltroDietetico[] = []) {
+export function useFeed(filtro?: FiltroDietetico, filtrosPerfil: FiltroDietetico[] = [], creatorChannelIds?: string[]) {
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -15,6 +15,13 @@ export function useFeed(filtro?: FiltroDietetico, filtrosPerfil: FiltroDietetico
   useEffect(() => {
     async function fetchFeed() {
       setLoading(true);
+
+      if (creatorChannelIds && creatorChannelIds.length === 0) {
+        setVideos([]);
+        setLoading(false);
+        return;
+      }
+
       let query = supabase
         .from('video_cache')
         .select('*')
@@ -24,12 +31,15 @@ export function useFeed(filtro?: FiltroDietetico, filtrosPerfil: FiltroDietetico
       if (filtro) {
         query = query.contains('filtros', [filtro]);
       }
+      if (creatorChannelIds) {
+        query = query.in('creator_channel_id', creatorChannelIds);
+      }
 
       const { data, error } = await query;
       if (error) {
         setError(error.message);
       } else {
-        const baseVideos = data.length === 0
+        const baseVideos = data.length === 0 && !creatorChannelIds
           ? MOCK_VIDEOS.filter((v) => !filtro || v.filtros.includes(filtro))
           : (data as VideoItem[]);
 
@@ -43,7 +53,7 @@ export function useFeed(filtro?: FiltroDietetico, filtrosPerfil: FiltroDietetico
     }
 
     fetchFeed();
-  }, [filtro, filtrosPerfil.join(',')]);
+  }, [filtro, filtrosPerfil.join(','), creatorChannelIds?.join(',')]);
 
   return { videos, loading, error };
 }

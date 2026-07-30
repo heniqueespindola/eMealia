@@ -1,11 +1,15 @@
 import { useMemo, useState } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, Pressable, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { useFeed } from '@/hooks/useFeed';
+import { useFollowedCreators } from '@/hooks/useFollowedCreators';
 import { useMacroDeviationAlert } from '@/hooks/useMacroDeviationAlert';
 import { Pill } from '@/components/ui/Pill';
+import { Button } from '@/components/ui/Button';
 import { CarouselStrip } from '@/components/feed/CarouselStrip';
 import { MacroDeviationAlert } from '@/components/macros/MacroDeviationAlert';
 import { FEED_FILTER_OPTIONS } from '@/constants/feedFilters';
@@ -17,8 +21,10 @@ export default function HomeScreen() {
   const { user } = useAuth();
   const { profile } = useProfile(user?.id);
   const [filtroSelecionado, setFiltroSelecionado] = useState<FiltroDietetico | null>(null);
+  const [vista, setVista] = useState<'descobrir' | 'a_seguir'>('descobrir');
   const filtrosPerfil = useMemo(() => profile?.filtros_dieteticos ?? [], [profile?.filtros_dieteticos]);
-  const { videos, loading } = useFeed(filtroSelecionado ?? undefined, filtrosPerfil);
+  const { channelIds } = useFollowedCreators(user?.id);
+  const { videos, loading } = useFeed(filtroSelecionado ?? undefined, filtrosPerfil, vista === 'a_seguir' ? channelIds : undefined);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const podeAcederMacros = profile ? PLANS[profile.plano].features.macros : false;
@@ -26,10 +32,13 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bgDark }}>
-      <View style={{ paddingHorizontal: spacing.lg, paddingBottom: spacing.md }}>
+      <View style={{ paddingHorizontal: spacing.lg, paddingBottom: spacing.md, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <Text style={{ fontFamily: fonts.display, fontSize: 24, color: colors.primary }}>
           eMealia
         </Text>
+        <Pressable onPress={() => router.push('/creators')}>
+          <Ionicons name="people-circle-outline" size={28} color={colors.primary} />
+        </Pressable>
       </View>
 
       {alerta && (
@@ -37,6 +46,11 @@ export default function HomeScreen() {
           <MacroDeviationAlert diasExcedidos={diasExcedidos} />
         </View>
       )}
+
+      <View style={{ paddingHorizontal: spacing.lg, flexDirection: 'row', flexWrap: 'wrap' }}>
+        <Pill label="Descobrir" selected={vista === 'descobrir'} onPress={() => setVista('descobrir')} />
+        <Pill label="A seguir" selected={vista === 'a_seguir'} onPress={() => setVista('a_seguir')} />
+      </View>
 
       <View style={{ paddingHorizontal: spacing.lg, flexDirection: 'row', flexWrap: 'wrap' }}>
         {FEED_FILTER_OPTIONS.map((opcao) => (
@@ -52,13 +66,22 @@ export default function HomeScreen() {
         ))}
       </View>
 
-      <View style={{ flex: 1, justifyContent: 'center' }}>
-        {loading ? (
-          <ActivityIndicator color={colors.primary} />
-        ) : (
-          <CarouselStrip key={filtroSelecionado ?? 'todos'} videos={videos} onIndexChange={setActiveIndex} />
-        )}
-      </View>
+      {vista === 'a_seguir' && channelIds.length === 0 ? (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: spacing.lg, gap: spacing.md }}>
+          <Text style={{ fontFamily: fonts.regular, color: colors.textMuted, textAlign: 'center' }}>
+            Ainda não segues nenhum criador.
+          </Text>
+          <Button label="Explorar Criadores em Destaque" onPress={() => router.push('/creators')} />
+        </View>
+      ) : (
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+          {loading ? (
+            <ActivityIndicator color={colors.primary} />
+          ) : (
+            <CarouselStrip key={`${vista}-${filtroSelecionado ?? 'todos'}`} videos={videos} onIndexChange={setActiveIndex} />
+          )}
+        </View>
+      )}
 
       <View style={{ flexDirection: 'row', justifyContent: 'center', paddingVertical: spacing.md }}>
         {videos.map((_, i) => (
