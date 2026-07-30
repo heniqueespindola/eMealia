@@ -329,3 +329,10 @@ CREATE POLICY "avatars: delete próprio"
   ON storage.objects FOR DELETE USING (
     bucket_id = 'avatars' AND (storage.foldername(name))[1] = auth.uid()::text
   );
+
+-- ─── F14 — Integração com Apps de Saúde
+
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS sync_saude_activo boolean NOT NULL DEFAULT false;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS sync_saude_ultimo_em timestamptz;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS sync_saude_plataforma text
+  CHECK (sync_saude_plataforma IN ('ios','android'));

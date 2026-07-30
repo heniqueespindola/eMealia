@@ -17,6 +17,8 @@ export type Momento = 'pequeno_almoco' | 'almoco' | 'jantar' | 'lanche';
 
 export type Idioma = 'pt-PT' | 'es-ES' | 'en';
 
+export type PlataformaSaude = 'ios' | 'android';
+
 export interface NotificacoesPrefs {
   sugestoes_jantar: boolean;
   alertas_despensa: boolean;
@@ -48,4 +50,7 @@ export interface Profile {
   expo_push_token:       string | null;
   idioma:                Idioma;
   notificacoes_prefs:    NotificacoesPrefs;
+  sync_saude_activo:     boolean;
+  sync_saude_ultimo_em:  string | null;
+  sync_saude_plataforma: PlataformaSaude | null;
 }

@@ -196,4 +196,13 @@ export const pt = {
     },
     objectivosNutricionais: { perda: 'Perda de peso', manutencao: 'Manutenção', ganho: 'Ganho de peso' },
   },
+  healthSync: {
+    titulo: 'Sincronização com apps de saúde',
+    premiumBloqueio: 'A sincronização com o Apple Health / Health Connect é uma funcionalidade Premium.',
+    plataforma: 'Plataforma: %{plataforma}',
+    plataformas: { ios: 'Apple Health', android: 'Health Connect' },
+    ultimoSync: 'Última sincronização: %{data}',
+    nuncaSincronizado: 'Ainda não sincronizado',
+    autorizacaoNegada: 'Não foi possível obter autorização para escrever dados de saúde.',
+  },
 };
