@@ -28,7 +28,7 @@ export default function SearchScreen() {
   const limit = profile?.plano === 'free' ? LIMITS.free.saved_recipes : LIMITS.premium.saved_recipes;
   const { usarDespensa: usarDespensaParam } = useLocalSearchParams<{ usarDespensa?: string }>();
   const { items: pantryItems } = usePantry(user?.id);
-  const { ingredients, filtros, results, loading, addIngredient, removeIngredient, toggleFiltro, usarDespensa } =
+  const { ingredients, filtros, results, loading, error, addIngredient, removeIngredient, toggleFiltro, usarDespensa } =
     useRecipeSearch();
   const { addFromRecipe } = useShoppingList(user?.id);
   const { fetchIngredients } = useRecipeIngredients();
@@ -145,6 +145,12 @@ export default function SearchScreen() {
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.lg }}>
           <Text style={{ fontFamily: fonts.regular, color: colors.textMuted, textAlign: 'center' }}>
             Adiciona pelo menos um ingrediente para veres receitas.
+          </Text>
+        </View>
+      ) : error ? (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.lg }}>
+          <Text style={{ fontFamily: fonts.regular, color: colors.textMuted, textAlign: 'center' }}>
+            {error}
           </Text>
         </View>
       ) : loading ? (

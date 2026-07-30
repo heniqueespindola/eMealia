@@ -1,9 +1,11 @@
+import { useEffect } from 'react';
 import { Modal, View, Text, Image, ScrollView, Pressable } from 'react-native';
 import * as Linking from 'expo-linking';
 import { Button } from '@/components/ui/Button';
 import { SourceBadge } from '@/components/feed/SourceBadge';
 import { colors, fonts, spacing } from '@/constants/theme';
 import { FILTROS_DIETETICOS } from '@emealia/config';
+import { cacheViewedRecipe } from '@/lib/offline/recipeCache';
 import type { SavedRecipe } from '@emealia/types';
 
 interface RecipeDetailModalProps {
@@ -23,6 +25,10 @@ export function RecipeDetailModal({
   podeAdicionarLista,
   addingToList,
 }: RecipeDetailModalProps) {
+  useEffect(() => {
+    if (recipe) cacheViewedRecipe(recipe);
+  }, [recipe?.id]);
+
   if (!recipe) return null;
 
   function handleOpenSource() {

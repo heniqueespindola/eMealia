@@ -24,7 +24,7 @@ export default function HomeScreen() {
   const [vista, setVista] = useState<'descobrir' | 'a_seguir'>('descobrir');
   const filtrosPerfil = useMemo(() => profile?.filtros_dieteticos ?? [], [profile?.filtros_dieteticos]);
   const { channelIds } = useFollowedCreators(user?.id);
-  const { videos, loading } = useFeed(filtroSelecionado ?? undefined, filtrosPerfil, vista === 'a_seguir' ? channelIds : undefined);
+  const { videos, loading, error } = useFeed(filtroSelecionado ?? undefined, filtrosPerfil, vista === 'a_seguir' ? channelIds : undefined);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const podeAcederMacros = profile ? PLANS[profile.plano].features.macros : false;
@@ -75,7 +75,11 @@ export default function HomeScreen() {
         </View>
       ) : (
         <View style={{ flex: 1, justifyContent: 'center' }}>
-          {loading ? (
+          {error ? (
+            <Text style={{ fontFamily: fonts.regular, color: colors.textMuted, textAlign: 'center', paddingHorizontal: spacing.lg }}>
+              {error}
+            </Text>
+          ) : loading ? (
             <ActivityIndicator color={colors.primary} />
           ) : (
             <CarouselStrip key={`${vista}-${filtroSelecionado ?? 'todos'}`} videos={videos} onIndexChange={setActiveIndex} />

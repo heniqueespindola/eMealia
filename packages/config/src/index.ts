@@ -51,6 +51,10 @@ export const PLANS = {
   },
 } as const;
 
+export const OFFLINE_LIMITS = {
+  recipe_cache_size: 20,
+} as const;
+
 export const LIMITS = {
   free: {
     pantry_items:    20,

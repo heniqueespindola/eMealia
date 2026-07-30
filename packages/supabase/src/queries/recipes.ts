@@ -18,7 +18,7 @@ export async function getSavedRecipes(
 
 export async function saveRecipe(
   client: SupabaseClient<Database>,
-  recipe: Omit<SavedRecipe, 'id' | 'created_at'>
+  recipe: Omit<SavedRecipe, 'id' | 'created_at' | 'updated_at'>
 ) {
   return client.from('saved_recipes').insert(recipe).select().single();
 }

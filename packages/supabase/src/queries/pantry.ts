@@ -30,3 +30,11 @@ export async function deletePantryItem(client: SupabaseClient<Database>, id: str
 export async function addPantryItems(client: SupabaseClient<Database>, items: PantryInsert[]) {
   return client.from('pantry_items').insert(items).select();
 }
+
+export async function getPantryItemById(client: SupabaseClient<Database>, id: string) {
+  return client.from('pantry_items').select('*').eq('id', id).maybeSingle();
+}
+
+export async function upsertPantryItem(client: SupabaseClient<Database>, item: PantryItem) {
+  return client.from('pantry_items').upsert(item, { onConflict: 'id' }).select().single();
+}
