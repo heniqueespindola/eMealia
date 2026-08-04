@@ -9,9 +9,10 @@ interface RecipeCardProps {
   saved:        boolean;
   onToggleSave: () => void;
   onAddToList:  () => void;
+  onPress:      () => void;
 }
 
-export function RecipeCard({ recipe, saved, onToggleSave, onAddToList }: RecipeCardProps) {
+export function RecipeCard({ recipe, saved, onToggleSave, onAddToList, onPress }: RecipeCardProps) {
   const { t } = useTranslation();
   const metadata = [
     recipe.tempo_minutos != null ? `${recipe.tempo_minutos} min` : null,
@@ -22,7 +23,8 @@ export function RecipeCard({ recipe, saved, onToggleSave, onAddToList }: RecipeC
     .join(' · ');
 
   return (
-    <View
+    <Pressable
+      onPress={onPress}
       style={{
         flexDirection:   'row',
         backgroundColor: colors.bgDarkAlt,
@@ -69,6 +71,6 @@ export function RecipeCard({ recipe, saved, onToggleSave, onAddToList }: RecipeC
           <Ionicons name="cart-outline" size={22} color={colors.primary} />
         </Pressable>
       </View>
-    </View>
+    </Pressable>
   );
 }
