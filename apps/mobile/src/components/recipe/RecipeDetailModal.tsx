@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import { Modal, View, Text, Image, ScrollView, Pressable } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
 import { Button } from '@/components/ui/Button';
 import { SourceBadge } from '@/components/feed/SourceBadge';
@@ -30,21 +32,41 @@ export function RecipeDetailModal({
     if (recipe) cacheViewedRecipe(recipe);
   }, [recipe?.id]);
 
-  if (!recipe) return null;
-
   function handleOpenSource() {
-    if (recipe!.source_url) Linking.openURL(recipe!.source_url);
+    if (recipe?.source_url) Linking.openURL(recipe.source_url);
   }
 
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
-      <ScrollView style={{ flex: 1, backgroundColor: colors.bgDark }} contentContainerStyle={{ padding: spacing.lg }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginBottom: spacing.sm }}>
-          <Pressable onPress={onClose} hitSlop={8}>
-            <Text style={{ fontFamily: fonts.medium, fontSize: 15, color: colors.textMuted }}>{t('recipe.fechar')}</Text>
+      <SafeAreaView style={{ flex: 1, backgroundColor: colors.bgDark }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            paddingHorizontal: spacing.md,
+            paddingTop: spacing.md,
+            paddingBottom: spacing.sm,
+          }}
+        >
+          <Pressable
+            onPress={onClose}
+            hitSlop={16}
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: 22,
+              backgroundColor: colors.bgDarkAlt,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Ionicons name="close" size={26} color={colors.textInverted} />
           </Pressable>
         </View>
 
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: spacing.lg, paddingTop: 0 }}>
+          {recipe && (
+            <>
         {recipe.thumbnail_url ? (
           <Image
             source={{ uri: recipe.thumbnail_url }}
@@ -117,7 +139,10 @@ export function RecipeDetailModal({
             </Text>
           )}
         </View>
+            </>
+          )}
       </ScrollView>
+      </SafeAreaView>
     </Modal>
   );
 }

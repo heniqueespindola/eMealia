@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { usePantry } from '@/hooks/usePantry';
 import { useRecipeSearch } from '@/hooks/useRecipeSearch';
+import { useSavedRecipes } from '@/hooks/useSavedRecipes';
 import { useIngredientAutocomplete } from '@/hooks/useIngredientAutocomplete';
 import { useShoppingList } from '@/hooks/useShoppingList';
 import { useRecipeIngredients } from '@/hooks/useRecipeIngredients';
@@ -16,12 +17,32 @@ import { IngredientChip } from '@/components/pantry/IngredientChip';
 import { IngredientAutocompleteList } from '@/components/pantry/IngredientAutocompleteList';
 import { FilterRow } from '@/components/recipe/FilterRow';
 import { RecipeCard } from '@/components/recipe/RecipeCard';
+import { RecipeDetailModal } from '@/components/recipe/RecipeDetailModal';
 import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, spacing } from '@/constants/theme';
 import { LIMITS } from '@emealia/config';
-import { saveRecipe, unsaveRecipe, getSavedRecipes } from '@emealia/supabase';
-import { supabase } from '@/lib/supabase';
-import type { RecipeSearchResult } from '@emealia/types';
+import type { RecipeSearchResult, SavedRecipe } from '@emealia/types';
+
+// O RecipeDetailModal foi construído para o formato SavedRecipe (usado em
+// Favoritos). Os resultados da pesquisa são todos da Spoonacular e ainda
+// não estão guardados, por isso adaptamos aqui em vez de reescrever o modal.
+function toDetailRecipe(r: RecipeSearchResult): SavedRecipe {
+  return {
+    id: r.id,
+    user_id: '',
+    recipe_id: r.id,
+    titulo: r.titulo,
+    fonte: 'spoonacular',
+    thumbnail_url: r.thumbnail_url,
+    source_url: r.source_url,
+    macros: r.macros,
+    tempo_minutos: r.tempo_minutos,
+    filtros: r.filtros,
+    colecao: 'favoritos',
+    created_at: '',
+    updated_at: '',
+  };
+}
 
 export default function SearchScreen() {
   const { t } = useTranslation();
@@ -32,20 +53,19 @@ export default function SearchScreen() {
   const { items: pantryItems } = usePantry(user?.id);
   const { ingredients, filtros, results, loading, error, addIngredient, removeIngredient, toggleFiltro, usarDespensa } =
     useRecipeSearch();
+  const { items: savedItems, save, unsave } = useSavedRecipes(user?.id);
   const { addFromRecipe } = useShoppingList(user?.id);
   const { fetchIngredients } = useRecipeIngredients();
   const [inputText, setInputText] = useState('');
   const [usandoDespensa, setUsandoDespensa] = useState(false);
+  const [detalheRecipe, setDetalheRecipe] = useState<RecipeSearchResult | null>(null);
   const suggestions = useIngredientAutocomplete(inputText);
-  const [savedMap, setSavedMap] = useState<Map<string, string>>(new Map());
-  const limitReached = savedMap.size >= limit;
 
-  useEffect(() => {
-    if (!user?.id) return;
-    getSavedRecipes(supabase!, user.id).then(({ data }) => {
-      setSavedMap(new Map((data ?? []).map((r) => [r.recipe_id, r.id])));
-    });
-  }, [user?.id]);
+  // Mapa recipe_id -> id do registo guardado, derivado da store partilhada
+  // (a mesma que o ecrã de Favoritos lê). Guardar/remover aqui atualiza essa
+  // store, por isso os dois ecrãs ficam sempre em sincronia.
+  const savedMap = new Map(savedItems.map((r) => [r.recipe_id, r.id]));
+  const limitReached = savedMap.size >= limit;
 
   useEffect(() => {
     if (usarDespensaParam === '1' && !usandoDespensa && pantryItems.length > 0) {
@@ -78,16 +98,10 @@ export default function SearchScreen() {
     if (!user) return;
     const savedId = savedMap.get(recipe.id);
     if (savedId) {
-      await unsaveRecipe(supabase!, savedId);
-      setSavedMap((prev) => {
-        const next = new Map(prev);
-        next.delete(recipe.id);
-        return next;
-      });
+      await unsave(savedId);
     } else {
       if (limitReached) return;
-      const { data } = await saveRecipe(supabase!, {
-        user_id:       user.id,
+      await save({
         recipe_id:     recipe.id,
         titulo:        recipe.titulo,
         fonte:         'spoonacular',
@@ -98,9 +112,6 @@ export default function SearchScreen() {
         filtros:       recipe.filtros,
         colecao:       'favoritos',
       });
-      if (data) {
-        setSavedMap((prev) => new Map(prev).set(recipe.id, data.id));
-      }
     }
   }
 
@@ -174,10 +185,19 @@ export default function SearchScreen() {
               saved={savedMap.has(item.id)}
               onToggleSave={() => handleToggleSave(item)}
               onAddToList={() => handleAddToList(item)}
+              onPress={() => setDetalheRecipe(item)}
             />
           )}
         />
       )}
+
+      <RecipeDetailModal
+        visible={!!detalheRecipe}
+        recipe={detalheRecipe ? toDetailRecipe(detalheRecipe) : null}
+        onClose={() => setDetalheRecipe(null)}
+        onAddToList={() => detalheRecipe && handleAddToList(detalheRecipe)}
+        podeAdicionarLista
+      />
     </SafeAreaView>
   );
 }
