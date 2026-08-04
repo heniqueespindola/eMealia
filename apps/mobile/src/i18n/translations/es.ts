@@ -4,7 +4,7 @@ export const es = {
   common: {
     cancelar: 'Cancelar', fechar: 'Cerrar', guardar: 'Guardar', eliminar: 'Eliminar',
     criar: 'Crear', adicionar: '+ Añadir', proximo: 'Siguiente', concluir: 'Finalizar',
-    erro: 'Error',
+    erro: 'Error', entendido: 'Entendido',
   },
   auth: {
     login: {
@@ -15,7 +15,10 @@ export const es = {
     register: {
       erroCamposVazios: 'Rellena todos los campos.', erroPasswordsDiferentes: 'Las contraseñas no coinciden.',
       erroTermos: 'Tienes que aceptar los términos para continuar.',
-      aceitoTermos: 'Acepto los términos y la política de privacidad.',
+      aceitoTermosPrefixo: 'Acepto los ', aceitoTermosTermos: 'términos', aceitoTermosMeio: ' y la ',
+      aceitoTermosPrivacidade: 'política de privacidad', aceitoTermosSufixo: '.',
+      confirmarEmailTitulo: 'Confirma tu email',
+      confirmarEmailMensagem: 'Te hemos enviado un email de confirmación. Ábrelo y confirma tu cuenta antes de entrar.',
       criarConta: 'Crear cuenta', jaTemConta: '¿Ya tienes cuenta? Entra', confirmarPassword: 'Confirmar contraseña',
     },
   },
@@ -162,7 +165,7 @@ export const es = {
     melhorValor: 'Mejor valor',
     featurePlaneamentoSemanal: 'Planificación semanal', featureMacros: 'Recuento de macros',
     featureExportLembretes: 'Exportar a Recordatorios/Tasks', featureDespensaIlimitada: 'Despensa ilimitada',
-    featureFavoritosIlimitados: 'Favoritos ilimitados',
+    featureFavoritosIlimitados: 'Favoritos ilimitados', featureSyncSaude: 'Sincronización con apps de salud',
   },
   pantryForm: {
     editarItem: 'Editar artículo', adicionarItem: 'Añadir artículo', nome: 'Nombre', quantidade: 'Cantidad',

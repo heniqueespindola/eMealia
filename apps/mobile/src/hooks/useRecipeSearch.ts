@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { getSupabase } from '@/lib/supabase';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import type { FiltroDietetico, PantryItem, RecipeSearchResult } from '@emealia/types';
 
@@ -27,7 +27,7 @@ export function useRecipeSearch() {
 
     setLoading(true);
     const timeout = setTimeout(async () => {
-      const { data, error } = await supabase.functions.invoke('search-recipes', {
+      const { data, error } = await getSupabase().functions.invoke('search-recipes', {
         body: { ingredients, filtros, number: 10 },
       });
       setResults(data?.results ?? []);

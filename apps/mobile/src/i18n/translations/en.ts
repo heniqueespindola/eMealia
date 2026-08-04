@@ -4,7 +4,7 @@ export const en = {
   common: {
     cancelar: 'Cancel', fechar: 'Close', guardar: 'Save', eliminar: 'Delete',
     criar: 'Create', adicionar: '+ Add', proximo: 'Next', concluir: 'Finish',
-    erro: 'Error',
+    erro: 'Error', entendido: 'Got it',
   },
   auth: {
     login: {
@@ -15,7 +15,10 @@ export const en = {
     register: {
       erroCamposVazios: 'Fill in all fields.', erroPasswordsDiferentes: 'Passwords do not match.',
       erroTermos: 'You must accept the terms to continue.',
-      aceitoTermos: 'I accept the terms and the privacy policy.',
+      aceitoTermosPrefixo: 'I accept the ', aceitoTermosTermos: 'terms', aceitoTermosMeio: ' and the ',
+      aceitoTermosPrivacidade: 'privacy policy', aceitoTermosSufixo: '.',
+      confirmarEmailTitulo: 'Confirm your email',
+      confirmarEmailMensagem: "We've sent a confirmation email. Open it and confirm your account before logging in.",
       criarConta: 'Create account', jaTemConta: 'Already have an account? Log in', confirmarPassword: 'Confirm password',
     },
   },
@@ -162,7 +165,7 @@ export const en = {
     melhorValor: 'Best value',
     featurePlaneamentoSemanal: 'Weekly planning', featureMacros: 'Macro tracking',
     featureExportLembretes: 'Export to Reminders/Tasks', featureDespensaIlimitada: 'Unlimited pantry',
-    featureFavoritosIlimitados: 'Unlimited favorites',
+    featureFavoritosIlimitados: 'Unlimited favorites', featureSyncSaude: 'Health app sync',
   },
   pantryForm: {
     editarItem: 'Edit item', adicionarItem: 'Add item', nome: 'Name', quantidade: 'Quantity',

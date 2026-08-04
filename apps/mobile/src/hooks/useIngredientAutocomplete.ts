@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { getSupabase } from '@/lib/supabase';
 
 export function useIngredientAutocomplete(query: string) {
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -10,7 +10,7 @@ export function useIngredientAutocomplete(query: string) {
       return;
     }
     const timeout = setTimeout(async () => {
-      const { data } = await supabase.functions.invoke('autocomplete-ingredients', {
+      const { data } = await getSupabase().functions.invoke('autocomplete-ingredients', {
         body: { query: query.trim() },
       });
       setSuggestions(data?.suggestions ?? []);

@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { View, Text, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
-import { Link } from 'expo-router';
+import { View, Text, KeyboardAvoidingView, Platform, Pressable, Alert } from 'react-native';
+import { Link, router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/hooks/useAuth';
 import { getAuthErrorMessage } from '@/lib/authErrors';
-import { supabase } from '@/lib/supabase';
+import { getSupabase } from '@/lib/supabase';
 import { useTranslation } from '@/hooks/useTranslation';
 import { colors, fonts, radius } from '@/constants/theme';
 
@@ -39,15 +40,28 @@ export default function RegisterScreen() {
     try {
       const data = await signUp(email.trim(), password);
       if (data.user) {
-        await supabase
+        await getSupabase()
           .from('profiles')
           .update({ gdpr_consent: true, gdpr_consent_at: new Date().toISOString() })
           .eq('id', data.user.id);
       }
-      // Nota: não navegamos manualmente aqui. O _layout.tsx raiz reage à
-      // mudança de `session`/`profile` e faz o redirect para o onboarding
-      // assim que a sessão fica disponível (ou para o login, se o Supabase
-      // exigir confirmação de email antes de criar sessão).
+
+      if (!data.session) {
+        // Sem sessão = o projeto Supabase exige confirmação de email antes
+        // de autenticar. O _layout.tsx raiz só navega quando `session`
+        // aparece, o que nunca vai acontecer sozinho aqui — por isso
+        // avisamos o utilizador e mandamo-lo explicitamente para o login.
+        Alert.alert(
+          t('auth.register.confirmarEmailTitulo'),
+          t('auth.register.confirmarEmailMensagem'),
+          [{ text: t('common.entendido'), onPress: () => router.replace('/(auth)/login') }]
+        );
+        return;
+      }
+      // Nota: se `data.session` existir (confirmação de email desativada
+      // no projeto Supabase), não navegamos manualmente aqui — o
+      // _layout.tsx raiz reage à mudança de `session`/`profile` e faz o
+      // redirect para o onboarding automaticamente.
     } catch (err) {
       setError(t(getAuthErrorMessage(err)));
     } finally {
@@ -100,11 +114,29 @@ export default function RegisterScreen() {
               borderWidth: 1,
               borderColor: colors.primary,
               backgroundColor: gdprAccepted ? colors.primary : 'transparent',
+              alignItems: 'center',
+              justifyContent: 'center',
               marginRight: 10,
             }}
-          />
+          >
+            {gdprAccepted && <Ionicons name="checkmark" size={14} color={colors.bgDark} />}
+          </View>
           <Text style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.textInverted, flex: 1 }}>
-            {t('auth.register.aceitoTermos')}
+            {t('auth.register.aceitoTermosPrefixo')}
+            <Text
+              onPress={() => router.push('/legal/terms')}
+              style={{ textDecorationLine: 'underline', color: colors.primary }}
+            >
+              {t('auth.register.aceitoTermosTermos')}
+            </Text>
+            {t('auth.register.aceitoTermosMeio')}
+            <Text
+              onPress={() => router.push('/legal/privacy')}
+              style={{ textDecorationLine: 'underline', color: colors.primary }}
+            >
+              {t('auth.register.aceitoTermosPrivacidade')}
+            </Text>
+            {t('auth.register.aceitoTermosSufixo')}
           </Text>
         </Pressable>
 

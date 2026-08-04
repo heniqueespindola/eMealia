@@ -35,3 +35,18 @@ function createSupabaseClient() {
 }
 
 export const supabase = createSupabaseClient();
+
+// O cliente pode ser null se o .env não estiver configurado (ver comentário
+// acima). A maioria dos hooks/ecrãs assume que, se chegaram a montar, o
+// Supabase está configurado — em vez de espalhar `if (!supabase) return`
+// por todo o lado (o que mudaria o comportamento silenciosamente), este
+// helper centraliza o null-check: satisfaz o TypeScript (retorna sempre um
+// SupabaseClient) e lança um erro claro no raro caso de faltar o .env.
+export function getSupabase() {
+  if (!supabase) {
+    throw new Error(
+      '[eMealia] Supabase não configurado. Cria um ficheiro .env com EXPO_PUBLIC_SUPABASE_URL e EXPO_PUBLIC_SUPABASE_ANON_KEY.'
+    );
+  }
+  return supabase;
+}
