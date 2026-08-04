@@ -3,34 +3,34 @@
 Fonte: `thoughts/shared/plans/2026-07-24-despensa.md`
 
 ## Pré-requisitos
-- [ ] Coluna `pantry_items.categoria` aplicada no schema remoto
-- [ ] Testar em dispositivo físico ou simulador com câmara simulada para o scanner de barcode (negar e conceder permissão)
-- [ ] Uma conta de teste no plano `free` com 20 itens já na despensa (para testar o limite) e outra sem esse limite
+- [x] Coluna `pantry_items.categoria` aplicada no schema remoto
+- [x] Testar em dispositivo físico ou simulador com câmara simulada para o scanner de barcode (negar e conceder permissão)
+- [x] Uma conta de teste no plano `free` com 20 itens já na despensa (para testar o limite) e outra sem esse limite
 
 ## Testes automáticos / de código
-- [ ] `npx tsc --noEmit` sem erros
-- [ ] `expo lint` sem warnings
-- [ ] Script `schema.sql` corrido 2x seguidas sem erro (idempotência do `ALTER TABLE ... ADD COLUMN IF NOT EXISTS categoria`)
+- [x] `npx tsc --noEmit` sem erros
+- [x] `expo lint` sem warnings
+- [x] Script `schema.sql` corrido 2x seguidas sem erro (idempotência do `ALTER TABLE ... ADD COLUMN IF NOT EXISTS categoria`)
 
 ## Testes manuais — CRUD básico
-1. [ ] Adicionar item por texto (com autocomplete) → aparece na secção de categoria correcta (frescos/secos/congelados/outros)
-2. [ ] Editar quantidade/validade de um item → persiste após pull-to-refresh
-3. [ ] Swipe para a esquerda num item → revela botão eliminar; toque longo → também elimina (com `Alert` de confirmação)
-4. [ ] Pull-to-refresh recarrega a lista a partir do Supabase
+1. [x] Adicionar item por texto (com autocomplete) → aparece na secção de categoria correcta (frescos/secos/congelados/outros)
+2. [x] Editar quantidade/validade de um item → persiste após pull-to-refresh
+3. [x] Swipe para a esquerda num item → revela botão eliminar; toque longo → também elimina (com `Alert` de confirmação)
+4. [x] Pull-to-refresh recarrega a lista a partir do Supabase
 
 ## Testes manuais — scanner de código de barras
-- [ ] Negar permissão de câmara → mostra ecrã de pedido de permissão, não crasha
-- [ ] Ler um código de barras real (produto português) → nome pré-preenchido via Open Food Facts
-- [ ] Ler um código de barras inexistente na OFF → não crasha, mostra "Produto não encontrado. Podes continuar a adicionar manualmente." e mantém o formulário aberto
+- [x] Negar permissão de câmara → mostra ecrã de pedido de permissão, não crasha
+- [x] Ler um código de barras real (produto português) → nome pré-preenchido via Open Food Facts
+- [x] Ler um código de barras inexistente na OFF → não crasha, mostra "Produto não encontrado. Podes continuar a adicionar manualmente." e mantém o formulário aberto
 
 ## Testes manuais — alertas e limites
-- [ ] Item com `expira_em` a 3 dias ou menos → mostra badge "Expira em breve"; item já expirado → também mostra o badge
-- [ ] Plano `free` com 20 itens → botão "+ Adicionar" desactivado, aviso de upgrade visível
-- [ ] Plano `premium_monthly`/`premium_annual` → sem limite, "+ Adicionar" sempre activo
+- [x] Item com `expira_em` a 3 dias ou menos → mostra badge "Expira em breve"; item já expirado → também mostra o badge
+- [x] Plano `free` com 20 itens → botão "+ Adicionar" desactivado, aviso de upgrade visível
+- [x] Plano `premium_monthly`/`premium_annual` → sem limite, "+ Adicionar" sempre activo
 
 ## Testes manuais — integração "cozinhar agora"
-- [ ] Com pelo menos 1 item na despensa, tocar "Cozinhar agora" → abre a Pesquisa (F04) com os ingredientes da despensa já como chips e "Usar despensa" activo
-- [ ] O toggle manual "Usar despensa" em `search.tsx` continua a funcionar exactamente como antes (teste de regressão explícito)
+- [x] Com pelo menos 1 item na despensa, tocar "Cozinhar agora" → abre a Pesquisa (F04) com os ingredientes da despensa já como chips e "Usar despensa" activo
+- [x] O toggle manual "Usar despensa" em `search.tsx` continua a funcionar exactamente como antes (teste de regressão explícito)
 
 ## Verificação de dados (Supabase)
 ```sql
