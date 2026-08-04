@@ -17,6 +17,7 @@ const FEATURE_KEYS: Record<keyof (typeof PLANS)['free']['features'], string> = {
   export_lembretes:      'planComparison.featureExportLembretes',
   despensa_ilimitada:    'planComparison.featureDespensaIlimitada',
   favoritos_ilimitados:  'planComparison.featureFavoritosIlimitados',
+  sync_saude:            'planComparison.featureSyncSaude',
 };
 
 function PlanFeatureRow({ label, incluida }: { label: string; incluida: boolean }) {

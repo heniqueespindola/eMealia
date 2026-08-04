@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { getSupabase } from '@/lib/supabase';
 import { MOCK_VIDEOS } from '@/constants/mockFeed';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import type { VideoItem, FiltroDietetico } from '@emealia/types';
@@ -31,7 +31,7 @@ export function useFeed(filtro?: FiltroDietetico, filtrosPerfil: FiltroDietetico
         return;
       }
 
-      let query = supabase
+      let query = getSupabase()
         .from('video_cache')
         .select('*')
         .order('views', { ascending: false })

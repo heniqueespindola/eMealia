@@ -6,7 +6,6 @@ import Constants from 'expo-constants';
 // de um import estático no topo do ficheiro, o código só é avaliado quando a
 // exportação é mesmo invocada — e nunca em Expo Go, porque bloqueamos isso primeiro.
 function getGoogleSignin() {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   return require('@react-native-google-signin/google-signin').GoogleSignin;
 }
 

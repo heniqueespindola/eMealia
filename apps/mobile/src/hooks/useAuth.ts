@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { getSupabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/authStore';
 import { identifyPurchasesUser } from '@/lib/revenuecat';
 
@@ -15,6 +15,8 @@ let authListenerInitialized = false;
 function ensureAuthListener() {
   if (authListenerInitialized) return;
   authListenerInitialized = true;
+
+  const supabase = getSupabase();
 
   supabase.auth.getSession().then(({ data: { session } }) => {
     useAuthStore.getState().setSession(session);
@@ -38,18 +40,18 @@ export function useAuth() {
   const user    = useAuthStore((s) => s.user);
 
   async function signIn(email: string, password: string) {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await getSupabase().auth.signInWithPassword({ email, password });
     if (error) throw error;
   }
 
   async function signUp(email: string, password: string) {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await getSupabase().auth.signUp({ email, password });
     if (error) throw error;
     return data; // { user, session }
   }
 
   async function signOut() {
-    await supabase.auth.signOut();
+    await getSupabase().auth.signOut();
   }
 
   return { session, loading, user, signIn, signUp, signOut };

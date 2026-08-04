@@ -2,7 +2,7 @@ export const pt = {
   common: {
     cancelar: 'Cancelar', fechar: 'Fechar', guardar: 'Guardar', eliminar: 'Eliminar',
     criar: 'Criar', adicionar: '+ Adicionar', proximo: 'Próximo', concluir: 'Concluir',
-    erro: 'Erro',
+    erro: 'Erro', entendido: 'Entendido',
   },
   auth: {
     login: {
@@ -13,7 +13,10 @@ export const pt = {
     register: {
       erroCamposVazios: 'Preenche todos os campos.', erroPasswordsDiferentes: 'As passwords não coincidem.',
       erroTermos: 'Tens de aceitar os termos para continuar.',
-      aceitoTermos: 'Aceito os termos e a política de privacidade.',
+      aceitoTermosPrefixo: 'Aceito os ', aceitoTermosTermos: 'termos', aceitoTermosMeio: ' e a ',
+      aceitoTermosPrivacidade: 'política de privacidade', aceitoTermosSufixo: '.',
+      confirmarEmailTitulo: 'Confirma o teu email',
+      confirmarEmailMensagem: 'Enviámos um email de confirmação. Abre-o e confirma a tua conta antes de entrares.',
       criarConta: 'Criar conta', jaTemConta: 'Já tens conta? Entra', confirmarPassword: 'Confirmar password',
     },
   },
@@ -160,7 +163,7 @@ export const pt = {
     melhorValor: 'Melhor valor',
     featurePlaneamentoSemanal: 'Planeamento semanal', featureMacros: 'Contagem de macros',
     featureExportLembretes: 'Export para Lembretes/Tasks', featureDespensaIlimitada: 'Despensa ilimitada',
-    featureFavoritosIlimitados: 'Favoritos ilimitados',
+    featureFavoritosIlimitados: 'Favoritos ilimitados', featureSyncSaude: 'Sincronização com apps de saúde',
   },
   pantryForm: {
     editarItem: 'Editar item', adicionarItem: 'Adicionar item', nome: 'Nome', quantidade: 'Quantidade',
