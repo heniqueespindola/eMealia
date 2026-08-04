@@ -38,12 +38,16 @@ export function ShoppingListModal({ visible, onClose, userId, profile }: Shoppin
     Share.share({ message: formatarListaTexto(items, t) });
   }
 
-  function handleExport() {
+  async function handleExport() {
     if (profile?.plano === 'free') {
       setUpgradeVisible(true);
       return;
     }
-    exportItems(items.filter((i) => !i.comprado));
+    try {
+      await exportItems(items.filter((i) => !i.comprado));
+    } catch (error) {
+      Alert.alert('Erro ao exportar', error instanceof Error ? error.message : String(error));
+    }
   }
 
   function handleClear() {

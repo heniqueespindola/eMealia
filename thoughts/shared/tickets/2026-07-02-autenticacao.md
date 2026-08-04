@@ -26,16 +26,16 @@ Ecrãs de login e registo com email + password via Supabase Auth. Após autentic
 **Então** é redireccionado para o ecrã de login
 
 ## Critérios de aceitação
-- [ ] Ecrã de login (`app/(auth)/login.tsx`) com campos email + password, validação básica, e link para registo
-- [ ] Ecrã de registo (`app/(auth)/register.tsx`) com campos email + password (+ confirmação), validação básica, e link para login
-- [ ] Integração com `supabase.auth.signInWithPassword` e `supabase.auth.signUp`
-- [ ] Criação automática de registo em `profiles` após signup (trigger Supabase ou chamada explícita)
-- [ ] Hook `useAuth` (`src/hooks/useAuth.ts`) expõe estado de sessão (user, loading, signIn, signUp, signOut)
-- [ ] Protecção de rotas: grupo `(tabs)` só acessível com sessão activa; sem sessão → redirect para `(auth)/login`
-- [ ] Redireccionamento automático para homepage após login/registo bem-sucedido
-- [ ] Mensagens de erro tratadas e apresentadas ao utilizador (credenciais inválidas, email já registado, etc.) em pt-PT
-- [ ] Estilo visual conforme paleta eMealia: fundo `#1B2632` (bgDark), botões `#FFB162` (primary), texto branco (`textInverted`) sobre fundo escuro; título com `fonts.display` (serif), corpo com `fonts.regular` (sans)
-- [ ] `tsc --noEmit` sem erros
+- [X] Ecrã de login (`app/(auth)/login.tsx`) com campos email + password, validação básica, e link para registo
+- [X] Ecrã de registo (`app/(auth)/register.tsx`) com campos email + password (+ confirmação), validação básica, e link para login
+- [X] Integração com `supabase.auth.signInWithPassword` e `supabase.auth.signUp`
+- [X] Criação automática de registo em `profiles` após signup (trigger Supabase ou chamada explícita)
+- [X] Hook `useAuth` (`src/hooks/useAuth.ts`) expõe estado de sessão (user, loading, signIn, signUp, signOut)
+- [X] Protecção de rotas: grupo `(tabs)` só acessível com sessão activa; sem sessão → redirect para `(auth)/login`
+- [X] Redireccionamento automático para homepage após login/registo bem-sucedido
+- [X] Mensagens de erro tratadas e apresentadas ao utilizador (credenciais inválidas, email já registado, etc.) em pt-PT
+- [X] Estilo visual conforme paleta eMealia: fundo `#1B2632` (bgDark), botões `#FFB162` (primary), texto branco (`textInverted`) sobre fundo escuro; título com `fonts.display` (serif), corpo com `fonts.regular` (sans)
+- [x] `tsc --noEmit` sem erros
 
 ## Notas técnicas
 - Usar `src/lib/supabase.ts` (cliente já configurado, região EU Frankfurt) — não criar novo cliente
