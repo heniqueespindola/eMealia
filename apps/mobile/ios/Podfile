@@ -89,3 +89,26 @@ target 'eMealia' do
     end
   end
 end
+
+# eMealia: gerar dSYM da Hermes durante o archive
+post_integrate do |installer|
+  require 'xcodeproj'
+  app_project_path = File.join(__dir__, 'eMealia.xcodeproj')
+  app_project = Xcodeproj::Project.open(app_project_path)
+  main_target = app_project.targets.find { |t| t.name == 'eMealia' }
+  if main_target
+    hermes_phase_name = 'eMealia: Generate Hermes dSYM'
+    already_added = main_target.build_phases.any? { |bp| bp.respond_to?(:name) && bp.name == hermes_phase_name }
+    unless already_added
+      hermes_phase = main_target.new_shell_script_build_phase(hermes_phase_name)
+      hermes_phase.shell_script = [
+        'HERMES_FRAMEWORK="${CODESIGNING_FOLDER_PATH}/Frameworks/hermes.framework/hermes"',
+        'if [ -f "$HERMES_FRAMEWORK" ] && [ -n "$DWARF_DSYM_FOLDER_PATH" ]; then',
+        '  mkdir -p "$DWARF_DSYM_FOLDER_PATH"',
+        '  xcrun dsymutil "$HERMES_FRAMEWORK" -o "$DWARF_DSYM_FOLDER_PATH/hermes.framework.dSYM"',
+        'fi',
+      ].join("\n")
+      app_project.save
+    end
+  end
+end
