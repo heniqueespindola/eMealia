@@ -4,7 +4,7 @@
     "slug": "emealia",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "https://via.placeholder.com/1024",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
       "backgroundColor": "#1B2632"
@@ -55,7 +55,9 @@
       [
         "expo-build-properties",
         { "android": { "compileSdkVersion": 35, "targetSdkVersion": 35 } }
-      ]
+      ],
+      "./plugins/withPodfileModularHeaders.js",
+      "./plugins/withFmtConstevalFix.js"
     ],
     "scheme": "emealia",
     "experiments": {
