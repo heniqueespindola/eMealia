@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "expo start",
     "ios": "expo start --ios --localhost",
-    "android": "expo start --android",
+    "android": "expo run:android",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx"
   },

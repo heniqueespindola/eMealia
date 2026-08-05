@@ -3,23 +3,23 @@
 Fonte: `thoughts/shared/plans/2026-07-24-planos-e-pagamentos.md`
 
 ## Pré-requisitos
-- [ ] ⚠️ **Requer dev client** (`eas build --profile development`) — `react-native-purchases` não funciona em Expo Go
-- [ ] Dashboard RevenueCat configurado: entitlement `premium`, offering `default`, packages `$rc_monthly`/`$rc_annual`, produtos `premium_monthly`/`premium_annual` em App Store Connect / Google Play Console (ou Test Store da RevenueCat para sandbox mais simples)
-- [ ] Webhook RevenueCat apontado para a Edge Function `revenuecat-webhook`, com `REVENUECAT_WEBHOOK_SECRET` colado no dashboard e definido como secret no Supabase
-- [ ] Secrets `SUPABASE_SERVICE_ROLE_KEY`, `REVENUECAT_WEBHOOK_SECRET`, `REVENUECAT_SECRET_API_KEY` configurados
+- [x] ⚠️ **Requer dev client** (`eas build --profile development`) — `react-native-purchases` não funciona em Expo Go
+- [x] Dashboard RevenueCat configurado: entitlement `premium`, offering `default`, packages `$rc_monthly`/`$rc_annual`, produtos `premium_monthly`/`premium_annual` em App Store Connect / Google Play Console (ou Test Store da RevenueCat para sandbox mais simples)
+- [x] Webhook RevenueCat apontado para a Edge Function `revenuecat-webhook`, com `REVENUECAT_WEBHOOK_SECRET` colado no dashboard e definido como secret no Supabase
+- [x] Secrets `SUPABASE_SERVICE_ROLE_KEY`, `REVENUECAT_WEBHOOK_SECRET`, `REVENUECAT_SECRET_API_KEY` configurados
 
 ## Testes automáticos / de código
-- [ ] `npm run typecheck` sem erros
-- [ ] `expo lint` sem warnings novos
-- [ ] `deno check supabase/functions/revenuecat-webhook/index.ts` sem erros de tipo
+- [x] `npm run typecheck` sem erros
+- [x] `expo lint` sem warnings novos
+- [x] `deno check supabase/functions/revenuecat-webhook/index.ts` sem erros de tipo
 
 ## Testes manuais — inicialização
-- [ ] Build de development instalado no simulador/dispositivo → app não crasha no arranque (confirma `Purchases.configure` não falha com as chaves configuradas)
-- [ ] Login com um utilizador → nenhum erro no console relacionado com `Purchases.logIn`
+- [x] Build de development instalado no simulador/dispositivo → app não crasha no arranque (confirma `Purchases.configure` não falha com as chaves configuradas)
+- [x] Login com um utilizador → nenhum erro no console relacionado com `Purchases.logIn`
 
 ## Testes manuais — componentes de paywall (isolado)
-- [ ] `PaywallModal` mostra os 3 planos, com "Melhor valor" visível apenas no Anual
-- [ ] Cores/fontes só usam tokens de `@/constants/theme` (nenhuma cor hardcoded)
+- [x] `PaywallModal` mostra os 3 planos, com "Melhor valor" visível apenas no Anual
+- [x] Cores/fontes só usam tokens de `@/constants/theme` (nenhuma cor hardcoded)
 
 ## Testes manuais — fluxo de compra/restauro (ecrã Perfil)
 - [ ] Utilizador `free`: separador Perfil mostra "Grátis" + botão "Fazer upgrade"
