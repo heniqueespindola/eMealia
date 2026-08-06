@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import { Input } from '@/components/ui/Input';
 import { Pill } from '@/components/ui/Pill';
 import { Button } from '@/components/ui/Button';
@@ -40,7 +40,7 @@ export function MacroGoalsForm({ userId, profile }: MacroGoalsFormProps) {
 
   async function handleGuardar() {
     if (!valido || !sexo || !nivelActividade || !objectivo) return;
-    await guardarObjectivos({
+    const ok = await guardarObjectivos({
       peso_kg:               pesoNum,
       altura_cm:             alturaNum,
       idade:                 idadeNum,
@@ -48,6 +48,11 @@ export function MacroGoalsForm({ userId, profile }: MacroGoalsFormProps) {
       nivel_actividade:      nivelActividade,
       objectivo_nutricional: objectivo,
     });
+    if (ok) {
+      Alert.alert(t('macroGoalsForm.guardadoTitulo'), t('macroGoalsForm.guardadoMensagem'));
+    } else {
+      Alert.alert(t('macroGoalsForm.erroTitulo'), t('macroGoalsForm.erroMensagem'));
+    }
   }
 
   return (

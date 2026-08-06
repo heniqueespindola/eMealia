@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, ActivityIndicator, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { usePlanner } from '@/hooks/usePlanner';
@@ -64,15 +66,27 @@ export default function MacrosScreen() {
 
   if (profileLoading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: colors.bgDark, justifyContent: 'center' }}>
-        <ActivityIndicator color={colors.primary} />
+      <SafeAreaView style={{ flex: 1, backgroundColor: colors.bgDark }}>
+        <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.sm }}>
+          <Pressable onPress={() => router.back()} hitSlop={12} style={{ padding: spacing.xs, alignSelf: 'flex-start' }}>
+            <Ionicons name="chevron-back" size={26} color={colors.textInverted} />
+          </Pressable>
+        </View>
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+          <ActivityIndicator color={colors.primary} />
+        </View>
       </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bgDark }}>
-      <ScrollView contentContainerStyle={{ padding: spacing.lg, gap: spacing.md }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.lg, paddingTop: spacing.sm }}>
+        <Pressable onPress={() => router.back()} hitSlop={12} style={{ padding: spacing.xs, marginLeft: -spacing.xs }}>
+          <Ionicons name="chevron-back" size={26} color={colors.textInverted} />
+        </Pressable>
+      </View>
+      <ScrollView contentContainerStyle={{ padding: spacing.lg, paddingTop: spacing.sm, gap: spacing.md }}>
         <Text style={{ fontFamily: fonts.display, fontSize: 24, color: colors.primary }}>
           {t('macros.titulo')}
         </Text>

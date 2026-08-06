@@ -64,7 +64,17 @@ export function PlannerSlotCard({ item, selecionado, onPress, onRemove, onTrocar
             borderColor: colors.primary,
           }}
         >
-          <Text numberOfLines={2} style={{ fontFamily: fonts.medium, fontSize: 12, color: colors.textInverted }}>
+          <Pressable
+            onPress={confirmRemove}
+            hitSlop={8}
+            style={{ position: 'absolute', top: 2, right: 2, zIndex: 1 }}
+          >
+            <Ionicons name="close-circle" size={16} color={colors.textMuted} />
+          </Pressable>
+          <Text
+            numberOfLines={2}
+            style={{ fontFamily: fonts.medium, fontSize: 12, color: colors.textInverted, paddingRight: spacing.sm }}
+          >
             {item.titulo}
           </Text>
         </Card>
