@@ -183,6 +183,8 @@ export const es = {
   macroGoalsForm: {
     sexoBiologico: 'Sexo biológico', masculino: 'Masculino', feminino: 'Femenino',
     nivelActividade: 'Nivel de actividad', objectivo: 'Objetivo',
+    guardadoTitulo: 'Objetivos guardados', guardadoMensagem: 'Tus metas diarias se actualizaron.',
+    erroTitulo: 'No se pudo guardar', erroMensagem: 'Inténtalo de nuevo en un momento.',
   },
   offline: { banner: 'Modo sin conexión — algunas funciones pueden no estar disponibles' },
   config: {

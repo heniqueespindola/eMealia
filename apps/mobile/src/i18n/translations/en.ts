@@ -183,6 +183,8 @@ export const en = {
   macroGoalsForm: {
     sexoBiologico: 'Biological sex', masculino: 'Male', feminino: 'Female',
     nivelActividade: 'Activity level', objectivo: 'Goal',
+    guardadoTitulo: 'Goals saved', guardadoMensagem: 'Your daily targets were updated.',
+    erroTitulo: "Couldn't save", erroMensagem: 'Please try again shortly.',
   },
   offline: { banner: 'Offline mode — some features may not be available' },
   config: {
