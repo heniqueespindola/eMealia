@@ -131,6 +131,8 @@ export const pt = {
   creators: {
     videosRecentes: 'Vídeos recentes', semVideos: 'Ainda sem vídeos.',
     titulo: 'Criadores em Destaque', semCriadores: 'Ainda não há criadores em destaque.',
+    erroTitulo: 'Não foi possível carregar os criadores',
+    videoIndisponivel: 'Este vídeo não pode ser reproduzido dentro da app.',
     aSeguir: 'A seguir', seguir: 'Seguir',
   },
   recipe: {

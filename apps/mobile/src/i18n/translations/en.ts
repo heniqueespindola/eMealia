@@ -133,6 +133,8 @@ export const en = {
   creators: {
     videosRecentes: 'Recent videos', semVideos: 'No videos yet.',
     titulo: 'Featured Creators', semCriadores: 'No featured creators yet.',
+    erroTitulo: 'Could not load creators',
+    videoIndisponivel: 'This video cannot be played inside the app.',
     aSeguir: 'Following', seguir: 'Follow',
   },
   recipe: {

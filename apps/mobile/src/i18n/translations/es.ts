@@ -133,6 +133,8 @@ export const es = {
   creators: {
     videosRecentes: 'Vídeos recientes', semVideos: 'Todavía sin vídeos.',
     titulo: 'Creadores Destacados', semCriadores: 'Todavía no hay creadores destacados.',
+    erroTitulo: 'No se pudieron cargar los creadores',
+    videoIndisponivel: 'Este vídeo no se puede reproducir dentro de la app.',
     aSeguir: 'Siguiendo', seguir: 'Seguir',
   },
   recipe: {

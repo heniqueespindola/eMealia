@@ -408,3 +408,27 @@ SELECT cron.schedule(
   );
   $$
 );
+
+-- ─── F11 (continuação) — sincronizar vídeos dos criadores diariamente
+-- Substitui o "processo externo fora deste repo" que a spec original de
+-- Criadores em Destaque assumia e que nunca chegou a existir. Sem chamada
+-- de body, a sync-creator-videos percorre TODOS os creators e preenche
+-- video_cache.creator_channel_id a partir da YouTube Data API.
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM cron.job WHERE jobname = 'sync-creator-videos') THEN
+    PERFORM cron.unschedule('sync-creator-videos');
+  END IF;
+END $$;
+
+SELECT cron.schedule(
+  'sync-creator-videos',
+  '0 6 * * *', -- 07h00 Europe/Lisbon (WEST, UTC+1) — ajustar para '0 7 * * *' em horário de inverno (WET)
+  $$
+  SELECT net.http_post(
+    url     := (SELECT decrypted_secret FROM vault.decrypted_secrets WHERE name = 'project_url') || '/functions/v1/sync-creator-videos',
+    headers := jsonb_build_object('Content-Type', 'application/json', 'Authorization', 'Bearer ' || (SELECT decrypted_secret FROM vault.decrypted_secrets WHERE name = 'service_role_key')),
+    body    := '{}'::jsonb
+  );
+  $$
+);

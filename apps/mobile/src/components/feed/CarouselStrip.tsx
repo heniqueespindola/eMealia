@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Pressable, View, useWindowDimensions } from 'react-native';
 import type { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -28,11 +28,11 @@ interface CarouselItemProps {
   itemSpacing: number;
   snapInterval: number;
   isActive: boolean;
-  isAutoplaying: boolean;
   onPress: () => void;
+  onEnded: () => void;
 }
 
-function CarouselItem({ item, index, scrollX, cardWidth, cardHeight, itemSpacing, snapInterval, isActive, isAutoplaying, onPress }: CarouselItemProps) {
+function CarouselItem({ item, index, scrollX, cardWidth, cardHeight, itemSpacing, snapInterval, isActive, onPress, onEnded }: CarouselItemProps) {
   const animatedStyle = useAnimatedStyle(() => {
     const inputRange = [(index - 1) * snapInterval, index * snapInterval, (index + 1) * snapInterval];
     const scale = interpolate(scrollX.value, inputRange, [0.82, 1, 0.82], Extrapolation.CLAMP);
@@ -42,7 +42,7 @@ function CarouselItem({ item, index, scrollX, cardWidth, cardHeight, itemSpacing
 
   return (
     <Animated.View style={[{ marginHorizontal: itemSpacing / 2 }, animatedStyle]}>
-      <VideoCard video={item} width={cardWidth} height={cardHeight} isActive={isActive} isAutoplaying={isAutoplaying} onPress={onPress} />
+      <VideoCard video={item} width={cardWidth} height={cardHeight} isActive={isActive} onPress={onPress} onEnded={onEnded} />
     </Animated.View>
   );
 }
@@ -57,7 +57,6 @@ export function CarouselStrip({ videos, onIndexChange }: CarouselStripProps) {
 
   const scrollX = useSharedValue(0);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [autoplayIndex, setAutoplayIndex] = useState<number | null>(null);
   const listRef = useAnimatedRef<Animated.FlatList<VideoItem>>();
 
   const scrollHandler = useAnimatedScrollHandler({
@@ -66,16 +65,18 @@ export function CarouselStrip({ videos, onIndexChange }: CarouselStripProps) {
     },
   });
 
-  useEffect(() => {
-    setAutoplayIndex(null);
-    const timer = setTimeout(() => setAutoplayIndex(activeIndex), 4000);
-    return () => clearTimeout(timer);
-  }, [activeIndex, videos.length]);
-
   function scrollToIndex(index: number) {
     const offset = index * SNAP_INTERVAL;
     listRef.current?.scrollToOffset({ offset, animated: true });
     setActiveIndex(index);
+    onIndexChange(index);
+  }
+
+  function handleEnded(index: number) {
+    // Fim do vídeo -> avança sozinho para o próximo, em vez de deixar o
+    // botão de replay do YouTube parado no cartão. Se for o último da
+    // lista, não há para onde avançar, fica como está.
+    if (index < videos.length - 1) scrollToIndex(index + 1);
   }
 
   function onMomentumScrollEnd(e: NativeSyntheticEvent<NativeScrollEvent>) {
@@ -109,8 +110,8 @@ export function CarouselStrip({ videos, onIndexChange }: CarouselStripProps) {
             itemSpacing={ITEM_SPACING}
             snapInterval={SNAP_INTERVAL}
             isActive={index === activeIndex}
-            isAutoplaying={index === autoplayIndex}
             onPress={() => scrollToIndex(index)}
+            onEnded={() => handleEnded(index)}
           />
         )}
       />
