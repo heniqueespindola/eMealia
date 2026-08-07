@@ -5,6 +5,8 @@ const expoConfig = require("eslint-config-expo/flat");
 module.exports = defineConfig([
   expoConfig,
   {
-    ignores: ["dist/*"],
+    // scripts/: ferramentas de build Node.js pontuais (ex: geração de
+    // ícone placeholder), fora do bundle da app — não código React Native.
+    ignores: ["dist/*", "scripts/*"],
   }
 ]);
