@@ -62,6 +62,7 @@ export function VideoCard({ video, width, height, isActive, onPress, onEnded }: 
 
   function handleOpenOnYoutube() {
     Linking.openURL(`https://www.youtube.com/watch?v=${video.youtube_id}`).catch((err) =>
+      console.log('[VideoCard] falha ao abrir no YouTube:', err)
     );
   }
 
